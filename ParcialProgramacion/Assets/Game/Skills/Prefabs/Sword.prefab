@@ -94,9 +94,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.020840704, y: 0}
+  m_Offset: {x: -0.0023479462, y: 0}
   serializedVersion: 2
-  m_Radius: 0.7570415
+  m_Radius: 0.38101983
 --- !u!114 &5052516208920564064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,12 +110,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   returnSpeed: 12
-  pierceAmount: 0
-  bounceSpeed: 0
-  enemyTargets: []
-  maxTravelDistance: 1.02
-  spinDuration: 800
-  hitCoolDown: 0
 --- !u!1 &2952298926946347728
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +183,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1252202837, guid: 70d768c14dc72d54280743290c2e41d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

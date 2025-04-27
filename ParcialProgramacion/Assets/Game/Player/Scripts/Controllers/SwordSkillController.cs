@@ -84,8 +84,7 @@ namespace Game.Player.Scripts.Controllers
                 _player.CatchTheSword();
             }
         }
-
-
+        
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (_isReturning) return;
@@ -97,13 +96,6 @@ namespace Game.Player.Scripts.Controllers
 
             StuckInto(collision);
         }
-
-        private void SwordSkillDamage(Enemy enemy)
-        {
-            _player.Stats.DoDamage(enemy.GetComponent<CharacterStats>());
-            enemy.StartCoroutine("FreezeTimeFor", _freezeTimeDuration);
-        }
-
         private void StuckInto(Collider2D collision)
         {
             if (_isSpinning)
@@ -111,13 +103,23 @@ namespace Game.Player.Scripts.Controllers
                 StopWhenSpinning();
                 return;
             }
-
+            
+            if (!collision.CompareTag("Enemy") && collision.gameObject.layer != LayerMask.NameToLayer("Ground")) 
+                return;
+            
             DisableSwordMovement();
-
             _animator.SetBool("Rotation", false);
+            var stuckPosition = transform.position;
             transform.parent = collision.transform;
+            transform.position = stuckPosition;
         }
-
+        
+        private void SwordSkillDamage(Enemy enemy)
+        {
+            _player.Stats.DoDamage(enemy.GetComponent<CharacterStats>());
+            enemy.StartCoroutine("FreezeTimeFor", _freezeTimeDuration);
+        }
+        
         private void DisableSwordMovement()
         {
             _canRotate = false;
