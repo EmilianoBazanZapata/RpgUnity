@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Game.Player.Scripts.Inputs;
+using Game.Player.Scripts.Managers;
 using Game.Player.Scripts.StateMachine;
 using Game.Player.Scripts.States;
 using Game.Shared.Scripts;
@@ -31,6 +32,11 @@ namespace Game.Player.Scripts
         
         public PlayerInputHandler InputHandler { get; private set; }
 
+        public SkillManager Skill { get; private set; }
+        public GameObject Sword { get; private set; }
+        public CharacterStats Stats { get; private set; }
+
+        
         #region States
         public PlayerStateMachine StateMachine { get; private set; }
         public PlayerIdleState IdleState { get; private set; }
@@ -41,6 +47,8 @@ namespace Game.Player.Scripts
         public PlayerWallSlideState WallSlideState { get; private set; }
         public PlayerWallJumpState WallJumpState { get; private set; }
         public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
+        public PlayerDeadState DeadState { get; private set; }
+        public PalyerCatchSwordState CatchSwordState { get; private set; }
         #endregion
         
         protected override void Awake()
@@ -56,11 +64,15 @@ namespace Game.Player.Scripts
             WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
             WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
             PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
+            DeadState = new PlayerDeadState(this, StateMachine, "Die");
+            CatchSwordState = new PalyerCatchSwordState(this, StateMachine, "CatchSword");
         }
 
         protected override void Start()
         {
             base.Start();
+            
+            Skill = SkillManager.Instance;
             
             StateMachine.Initialize(IdleState);
             DefaultMoveSpeed = MoveSpeed;
@@ -75,6 +87,9 @@ namespace Game.Player.Scripts
             StateMachine.CurrentState.Update();
 
             CheckForDashInput();
+            
+            if (Input.GetKeyDown(KeyCode.F))
+                Skill.CrystalSkill.CanUseSkill();
         }
         
         private void CheckForDashInput()
@@ -82,8 +97,8 @@ namespace Game.Player.Scripts
             if (IsWallDetected())
                 return;
 
-            if (!Input.GetKeyDown(KeyCode.LeftShift)) return;
-        
+            if (!Input.GetKeyDown(KeyCode.LeftShift) || !SkillManager.Instance.DashSkill.CanUseSkill()) return;
+            
             DashDir = Input.GetAxisRaw("Horizontal");
 
             if (DashDir != 0)
@@ -99,6 +114,19 @@ namespace Game.Player.Scripts
 
             IsBusy = false;
         }
+        
+        public void AssignNewSword(GameObject newSword)
+        {
+            Sword = newSword;
+        }
+
+        public void CatchTheSword()
+        {
+            StateMachine.ChangeState(CatchSwordState);
+            Destroy(Sword);
+        }
+
+        
         public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
     }
 }

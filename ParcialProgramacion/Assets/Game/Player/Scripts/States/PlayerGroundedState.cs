@@ -1,4 +1,5 @@
-﻿using Game.Player.Scripts.StateMachine;
+﻿using Game.Player.Scripts.Managers;
+using Game.Player.Scripts.StateMachine;
 using UnityEngine;
 
 namespace Game.Player.Scripts.States
