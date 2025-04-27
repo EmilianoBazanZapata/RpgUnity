@@ -307,13 +307,18 @@ MonoBehaviour:
   attackCheck: {fileID: 1524081973}
   attackCheckRadius: 1.64
   agroDistance: 2
+  AttackMovement:
+  - {x: 3, y: 1.5}
+  - {x: 1, y: 2.5}
+  - {x: 4, y: 1.5}
+  CounterAttackDuration: 0.2
   MoveSpeed: 9
   JumpForce: 12
   SwordReturnImpact: 5
   DefaultMoveSpeed: 0
   DefaultJumpForce: 0
   DashSpeed: 25
-  DashDuration: 0.4
+  DashDuration: 0.2
   DefaultDashSpeed: 0
 --- !u!61 &892059634
 BoxCollider2D:
@@ -375,7 +380,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -398,6 +403,7 @@ GameObject:
   - component: {fileID: 1456276323}
   - component: {fileID: 1456276324}
   - component: {fileID: 1456276325}
+  - component: {fileID: 1456276326}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -493,6 +499,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1456276326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456276322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55a1b8d345614d7e9d94be0cfa081d2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1524081972
 GameObject:
   m_ObjectHideFlags: 0

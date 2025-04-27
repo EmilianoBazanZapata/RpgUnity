@@ -1,4 +1,5 @@
 ﻿using Game.Player.Scripts.StateMachine;
+using UnityEngine;
 
 namespace Game.Player.Scripts.States
 {
@@ -18,6 +19,14 @@ namespace Game.Player.Scripts.States
         
         private void ControlPlayerStateChanges()
         {
+            if (!Player.IsGroundDetected())
+                StateMachine.ChangeState(Player.AirState);
+        
+            if (Input.GetKeyDown(KeyCode.Space) && Player.IsGroundDetected())
+                StateMachine.ChangeState(Player.JumpState);
+            
+            if(Input.GetKey(KeyCode.Mouse0))
+                StateMachine.ChangeState(Player.PrimaryAttackState);
         }
     }
 }

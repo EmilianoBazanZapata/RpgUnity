@@ -1,4 +1,5 @@
-﻿using Game.Player.Scripts.Inputs;
+﻿using System.Collections;
+using Game.Player.Scripts.Inputs;
 using Game.Player.Scripts.StateMachine;
 using Game.Player.Scripts.States;
 using Game.Shared.Scripts;
@@ -8,6 +9,11 @@ namespace Game.Player.Scripts
 {
     public class Player : Entity
     {
+        [Header("Attack details")] 
+        public Vector2[] AttackMovement;
+        public float CounterAttackDuration = .2f;
+        public bool IsBusy { get; private set; }
+        
         [Header("Move info")] 
         public float MoveSpeed = 9f;
         public float JumpForce = 8f;
@@ -17,11 +23,10 @@ namespace Game.Player.Scripts
         
         [Header("Dash info")] 
         public float DashSpeed = 12f;
-        public float DashDuration = 0.4f;
+        public float DashDuration = 0.2f;
         public float DashDir { get; private set; }
         public float DefaultDashSpeed;
         
-        public bool IsBusy { get; private set; }
         public PlayerInputHandler InputHandler { get; private set; }
 
         #region States
@@ -29,6 +34,11 @@ namespace Game.Player.Scripts
         public PlayerIdleState IdleState { get; private set; }
         public PlayerMoveState MoveState { get; private set; }
         public PlayerDashState DashState { get; private set; }
+        public PlayerJumpState JumpState { get; private set; }
+        public PlayerAirState AirState { get; private set; }
+        public PlayerWallSlideState WallSlideState { get; private set; }
+        public PlayerWallJumpState WallJumpState { get; private set; }
+        public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
         #endregion
         
         protected override void Awake()
@@ -39,6 +49,11 @@ namespace Game.Player.Scripts
             IdleState = new PlayerIdleState(this, StateMachine, "Idle");
             MoveState = new PlayerMoveState(this, StateMachine, "Move");
             DashState = new PlayerDashState(this, StateMachine, "Dash");
+            JumpState = new PlayerJumpState(this, StateMachine, "Jump");
+            AirState = new PlayerAirState(this, StateMachine, "Jump");
+            WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
+            WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
+            PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
         }
 
         protected override void Start()
@@ -74,5 +89,14 @@ namespace Game.Player.Scripts
 
             StateMachine.ChangeState(DashState);
         }
+        public IEnumerator BusyFor(float seconds)
+        {
+            IsBusy = true;
+
+            yield return new WaitForSeconds(seconds);
+
+            IsBusy = false;
+        }
+        public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
     }
 }
