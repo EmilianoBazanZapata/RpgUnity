@@ -20,6 +20,8 @@ namespace Game.Player.Scripts
         public float SwordReturnImpact;
         public float DefaultMoveSpeed;
         public float DefaultJumpForce;
+        public int MaxJumpCount = 2;
+        public int JumpCount;
         
         [Header("Dash info")] 
         public float DashSpeed = 12f;

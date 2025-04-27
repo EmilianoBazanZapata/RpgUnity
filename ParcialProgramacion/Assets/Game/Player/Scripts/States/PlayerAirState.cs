@@ -1,4 +1,5 @@
 ﻿using Game.Player.Scripts.StateMachine;
+using UnityEngine;
 
 namespace Game.Player.Scripts.States
 {
@@ -12,6 +13,13 @@ namespace Game.Player.Scripts.States
         public override void Update()
         {
             base.Update();
+            
+                        
+            if (Input.GetKeyDown(KeyCode.Space) && !Player.IsGroundDetected() && Player.JumpCount < Player.MaxJumpCount)
+            {
+                StateMachine.ChangeState(Player.JumpState);
+                Player.JumpCount++;
+            }
 
             if (Player.IsWallDetected())
                 StateMachine.ChangeState(Player.WallSlideState);
