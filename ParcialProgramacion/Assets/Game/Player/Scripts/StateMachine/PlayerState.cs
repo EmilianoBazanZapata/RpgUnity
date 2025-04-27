@@ -16,6 +16,7 @@ namespace Game.Player.Scripts.StateMachine
         protected bool TriggerCalled;
         
         protected readonly string AnimBoolName;
+        public Rigidbody2D Rigidbody2D { get; private set; }
 
         public PlayerState(Player player, PlayerStateMachine stateMachine, string animBoolName)
         {
@@ -27,6 +28,7 @@ namespace Game.Player.Scripts.StateMachine
         public virtual void Enter()
         {
             Player.Anim.SetBool(AnimBoolName, true);
+            Rigidbody2D = Player.Rb;
             TriggerCalled = false;
         }
 
