@@ -19,6 +19,7 @@ namespace Game.Player.Scripts.Skills
         [SerializeField] private float _spaceBeetwenDots;
         [SerializeField] private GameObject _dotPrefab;
         [SerializeField] private Transform _dotsParent;
+        [SerializeField] private Transform _SpawnSwordPosition;
 
         private Vector2 _finalDirection;
         private GameObject[] dots;
@@ -46,7 +47,7 @@ namespace Game.Player.Scripts.Skills
 
         public void CreateSword()
         {
-            var newSword = Instantiate(_swordPrefab, _dotPrefab.transform.position, transform.rotation);
+            var newSword = Instantiate(_swordPrefab, _SpawnSwordPosition.position, transform.rotation);
 
             var newSwordScript = newSword.GetComponent<SwordSkillController>();
             
