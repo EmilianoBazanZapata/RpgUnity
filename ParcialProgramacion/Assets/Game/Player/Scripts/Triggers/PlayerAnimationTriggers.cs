@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Player.Scripts.Managers;
+using UnityEngine;
 
 namespace Game.Player.Scripts.Triggers
 {
@@ -9,6 +10,11 @@ namespace Game.Player.Scripts.Triggers
         private void animationTrigger()
         {
             _player.AnimationTrigger();
+        }
+
+        private void TrhowSword()
+        {
+            SkillManager.Instance.SwordSkill.CreateSword();
         }
     }
 }

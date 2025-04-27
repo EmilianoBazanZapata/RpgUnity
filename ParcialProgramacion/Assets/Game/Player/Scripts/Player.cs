@@ -49,6 +49,7 @@ namespace Game.Player.Scripts
         public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
         public PlayerDeadState DeadState { get; private set; }
         public PalyerCatchSwordState CatchSwordState { get; private set; }
+        public PlayerAimSwordState AimSwordState { get; private set; }
         #endregion
         
         protected override void Awake()
@@ -66,6 +67,8 @@ namespace Game.Player.Scripts
             PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
             DeadState = new PlayerDeadState(this, StateMachine, "Die");
             CatchSwordState = new PalyerCatchSwordState(this, StateMachine, "CatchSword");
+            AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
+
         }
 
         protected override void Start()

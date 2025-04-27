@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 818596971523824300}
-  - component: {fileID: 3323476621430481186}
   - component: {fileID: 452243860550589906}
   - component: {fileID: 2599409529940478753}
+  - component: {fileID: 5052516208920564064}
   m_Layer: 0
   m_Name: Sword
   m_TagString: Untagged
@@ -35,25 +35,6 @@ Transform:
   - {fileID: 8177698987340455602}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3323476621430481186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103399378082587615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6164c01747324690bca207476987a38f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  returnSpeed: 1
-  pierceAmount: 1
-  bounceSpeed: 1
-  enemyTargets: []
-  maxTravelDistance: 1
-  spinDuration: 1
-  hitCoolDown: 1
 --- !u!50 &452243860550589906
 Rigidbody2D:
   serializedVersion: 4
@@ -116,6 +97,25 @@ CircleCollider2D:
   m_Offset: {x: -0.020840704, y: 0}
   serializedVersion: 2
   m_Radius: 0.7570415
+--- !u!114 &5052516208920564064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 103399378082587615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7786c81f59044ffa9ce6cd21f73708b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  returnSpeed: 12
+  pierceAmount: 0
+  bounceSpeed: 0
+  enemyTargets: []
+  maxTravelDistance: 1.02
+  spinDuration: 800
+  hitCoolDown: 0
 --- !u!1 &2952298926946347728
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,8 +127,6 @@ GameObject:
   - component: {fileID: 8177698987340455602}
   - component: {fileID: 6077826433352763845}
   - component: {fileID: 3258678006023299977}
-  - component: {fileID: 4674861316654599224}
-  - component: {fileID: 2163559088421090585}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -224,65 +222,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!50 &4674861316654599224
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2952298926946347728}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!58 &2163559088421090585
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2952298926946347728}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.018312275, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.7929972

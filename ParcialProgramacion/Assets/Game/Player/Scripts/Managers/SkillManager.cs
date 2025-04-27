@@ -9,6 +9,7 @@ namespace Game.Player.Scripts.Managers
 
         public DashSkill DashSkill { get; private set; }
         public CrystalSkill CrystalSkill { get; private set; }
+        public SwordSkill SwordSkill { get; private set; }
 
         private void Awake()
         {
@@ -22,6 +23,7 @@ namespace Game.Player.Scripts.Managers
         {
             DashSkill = GetComponent<DashSkill>();
             CrystalSkill = GetComponent<CrystalSkill>();
+            SwordSkill = GetComponent<SwordSkill>();
         }
     }
 }
