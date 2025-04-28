@@ -94,13 +94,8 @@ namespace Game.Player.Scripts.Controllers
 
         public void FinishCrystal()
         {
-            if (_canExplode)
-            {
-                _canGrow = true;
-                _animator.SetTrigger("Explode");
-            }
-            else
-                SelfDestroy();
+            _canGrow = true;
+            _animator.SetTrigger("Explode");
         }
 
         public void SelfDestroy() => Destroy(gameObject);

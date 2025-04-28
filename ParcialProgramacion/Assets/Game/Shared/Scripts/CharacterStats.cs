@@ -29,6 +29,15 @@ namespace Game.Shared.Scripts
         private int _igniteDamage;
         private int _shockDamage;
 
+        protected virtual void Update()
+        {
+            if (_currentHealth < 0 && !isDead)
+            {
+                Debug.Log("Dead");
+                Die();
+            }
+        }
+
         protected virtual void Start()
         {
             critPower.SetDefaultValue(150);
@@ -42,6 +51,8 @@ namespace Game.Shared.Scripts
 
             var totalDamage = damage.GetValue() + strength.GetValue();
 
+            Debug.Log(totalDamage);
+            
             if (CanCrit())
                 totalDamage = CalculateCriticalDamage(totalDamage);
 

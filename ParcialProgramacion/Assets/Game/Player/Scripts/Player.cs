@@ -131,5 +131,12 @@ namespace Game.Player.Scripts
 
         
         public void AnimationTrigger() => StateMachine.CurrentState.AnimationFinishTrigger();
+        
+        public override void Die()
+        {
+            base.Die();
+
+            StateMachine.ChangeState(DeadState);
+        }
     }
 }

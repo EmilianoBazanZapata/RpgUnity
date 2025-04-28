@@ -15,8 +15,8 @@ namespace Game.Player.Scripts.Skills
         [Header("Crystal Types")] [SerializeField]
         private bool _cloneInsteadOfCrystal; // Crystal mirage
 
-        [SerializeField] private bool _canExplode; // Explosive crystal
-        [SerializeField] private bool _canMoveToEnemy; // Moving crystal
+        [SerializeField] private bool _canExplode = true; // Explosive crystal
+        [SerializeField] private bool _canMoveToEnemy = true; // Moving crystal
         [SerializeField] private float _moveSpeed;
 
         [Header("Multi Stack Settings")] [SerializeField]
