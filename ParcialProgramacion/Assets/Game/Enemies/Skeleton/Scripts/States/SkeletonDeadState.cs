@@ -19,6 +19,8 @@ namespace Game.Enemies.Skeleton.Scripts.States
             
             _enemy.Collider2D.enabled = false;
             _enemy.Rb.bodyType = RigidbodyType2D.Static;
+            
+            _enemy.HealthBarUI.SetActive(false);
         }
     }
 }

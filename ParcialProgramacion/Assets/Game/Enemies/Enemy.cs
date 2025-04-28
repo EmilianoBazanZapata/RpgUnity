@@ -25,6 +25,7 @@ namespace Game.Enemies
 
         public EnemyStateMachine EnemyStateMachine { get; private set; }
         public string lastAnimBoolName { get; private set; }
+        [SerializeField] public GameObject HealthBarUI;
 
         protected override void Awake()
         {
