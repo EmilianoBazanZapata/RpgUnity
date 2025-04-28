@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Enemies.Skeleton.Scripts;
+using Game.Enemies;
 using Game.Shared.Enums;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,11 +8,8 @@ namespace Game.Shared.Scripts
 {
     public class CharacterStats : MonoBehaviour
     {
-        private EntityFx _entityFX;
-
         [Header("Major stats")] public Stat strength;
         public Stat agility;
-        public Stat intelligence;
         public Stat vitality;
 
         [Header("Offensive stats")] public Stat damage;
@@ -36,8 +33,6 @@ namespace Game.Shared.Scripts
         {
             critPower.SetDefaultValue(150);
             _currentHealth = GetMaxHealthValue();
-
-            _entityFX = GetComponent<EntityFx>();
         }
 
         public virtual void DoDamage(CharacterStats targetStats)
@@ -102,7 +97,6 @@ namespace Game.Shared.Scripts
             DecreaseHealthBy(damage);
 
             GetComponent<Entity>().DamageImpact();
-            _entityFX.StartCoroutine("FlashFX");
 
             if (_currentHealth <= 0 && !isDead)
                 Die();
@@ -141,7 +135,6 @@ namespace Game.Shared.Scripts
             {
                 StatType.strength => strength,
                 StatType.agility => agility,
-                StatType.intelegence => intelligence,
                 StatType.vitality => vitality,
                 StatType.damage => damage,
                 StatType.critChance => critChance,

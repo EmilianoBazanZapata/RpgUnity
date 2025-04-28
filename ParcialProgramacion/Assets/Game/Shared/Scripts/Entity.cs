@@ -16,6 +16,7 @@ namespace Game.Shared.Scripts
         public Rigidbody2D Rb { get; private set; }
         public SpriteRenderer Sr { get; private set; }
         public CapsuleCollider2D Collider2D { get; private set; }
+        public CharacterStats Stats { get; private set; }
 
         #endregion
 
@@ -58,6 +59,7 @@ namespace Game.Shared.Scripts
             Anim = GetComponentInChildren<Animator>();
             Rb = GetComponent<Rigidbody2D>();
             Sr = GetComponentInChildren<SpriteRenderer>();
+            Stats = GetComponent<CharacterStats>();
             Collider2D = GetComponent<CapsuleCollider2D>();
         }
 

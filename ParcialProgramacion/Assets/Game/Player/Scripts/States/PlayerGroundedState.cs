@@ -1,5 +1,4 @@
 ﻿using Game.Player.Scripts.Controllers;
-using Game.Player.Scripts.Managers;
 using Game.Player.Scripts.StateMachine;
 using UnityEngine;
 
@@ -38,6 +37,9 @@ namespace Game.Player.Scripts.States
             
             if(Input.GetKey(KeyCode.Mouse1) && HasNoSword())
                 StateMachine.ChangeState(Player.AimSwordState);
+            
+            if(Input.GetKeyDown(KeyCode.Q))
+                StateMachine.ChangeState(Player.CounterAttackState);
         }
         
         private bool HasNoSword()

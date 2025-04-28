@@ -1,7 +1,26 @@
-﻿namespace Game.Enemies.Skeleton.Scripts.States
+﻿using Game.Enemies.StateMachine;
+
+namespace Game.Enemies.Skeleton.Scripts.States
 {
-    public class SkeletonMoveState
+    public class SkeletonMoveState : SkeletonGroundedState
     {
-        
+        public SkeletonMoveState(Enemy enemy,
+                                 EnemyStateMachine enemyStateMachine, 
+                                 string animBoolName,
+                                 EnemySkeleton enemySkeleton) : base(enemy, enemyStateMachine, animBoolName, enemySkeleton)
+        {
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            EnemySkeleton.SetVelocity(EnemySkeleton.moveSpeed * EnemySkeleton.FacingDir, Rigidbody2D.velocity.y);
+
+            if (!EnemySkeleton.IsWallDetected() && EnemySkeleton.IsGroundDetected()) return;
+            
+            EnemySkeleton.Flip();
+            EnemyStateMachine.ChangeState(EnemySkeleton.IdleState);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Game.Enemies.Skeleton.Scripts;
+﻿using Game.Enemies;
 using Game.Shared.Scripts;
 using UnityEngine;
 
@@ -98,20 +98,10 @@ namespace Game.Player.Scripts.Controllers
         }
         private void StuckInto(Collider2D collision)
         {
-            if (_isSpinning)
-            {
-                StopWhenSpinning();
-                return;
-            }
-            
-            if (!collision.CompareTag("Enemy") && collision.gameObject.layer != LayerMask.NameToLayer("Ground")) 
-                return;
-            
             DisableSwordMovement();
+
             _animator.SetBool("Rotation", false);
-            var stuckPosition = transform.position;
             transform.parent = collision.transform;
-            transform.position = stuckPosition;
         }
         
         private void SwordSkillDamage(Enemy enemy)

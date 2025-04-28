@@ -1,6 +1,8 @@
-﻿namespace Game.Player.Scripts
+﻿using Game.Shared.Scripts;
+
+namespace Game.Player.Scripts
 {
-    public class PlayerItemDrop
+    public class PlayerItemDrop : ItemDrop
     {
         
     }

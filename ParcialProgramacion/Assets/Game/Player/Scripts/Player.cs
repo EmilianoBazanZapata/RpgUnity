@@ -34,7 +34,6 @@ namespace Game.Player.Scripts
 
         public SkillManager Skill { get; private set; }
         public GameObject Sword { get; private set; }
-        public CharacterStats Stats { get; private set; }
 
         
         #region States
@@ -50,6 +49,7 @@ namespace Game.Player.Scripts
         public PlayerDeadState DeadState { get; private set; }
         public PalyerCatchSwordState CatchSwordState { get; private set; }
         public PlayerAimSwordState AimSwordState { get; private set; }
+        public PlayerCounterAttackState CounterAttackState { get; private set; }
         #endregion
         
         protected override void Awake()
@@ -68,7 +68,7 @@ namespace Game.Player.Scripts
             DeadState = new PlayerDeadState(this, StateMachine, "Die");
             CatchSwordState = new PalyerCatchSwordState(this, StateMachine, "CatchSword");
             AimSwordState = new PlayerAimSwordState(this, StateMachine, "AimSword");
-
+            CounterAttackState = new PlayerCounterAttackState(this, StateMachine, "CounterAttack");
         }
 
         protected override void Start()

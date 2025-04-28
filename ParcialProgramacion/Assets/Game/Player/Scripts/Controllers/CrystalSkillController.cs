@@ -1,4 +1,4 @@
-﻿using Game.Enemies.Skeleton.Scripts;
+﻿using Game.Enemies;
 using Game.Shared.Scripts;
 using UnityEngine;
 
