@@ -89,14 +89,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.2
-    functionName: SelfDestroy
+    functionName: AnimationExplode
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.2
-    functionName: AnimationExplode
+    functionName: SelfDestroy
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

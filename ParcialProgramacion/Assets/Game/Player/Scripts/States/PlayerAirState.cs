@@ -21,8 +21,8 @@ namespace Game.Player.Scripts.States
                 Player.JumpCount++;
             }
 
-            if (Player.IsWallDetected())
-                StateMachine.ChangeState(Player.WallSlideState);
+            // if (Player.IsWallDetected())
+            //     StateMachine.ChangeState(Player.WallSlideState);
         
             if (Player.IsGroundDetected())
                 StateMachine.ChangeState(Player.IdleState);

@@ -57,7 +57,6 @@ namespace Game.Enemies
         protected override void Die()
         {
             base.Die();
-            Debug.Log(_enemy);
             _enemy.Die();
             //_itemDrop.GenerateDrop();
         }

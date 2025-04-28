@@ -43,7 +43,7 @@ namespace Game.Player.Scripts
         public PlayerDashState DashState { get; private set; }
         public PlayerJumpState JumpState { get; private set; }
         public PlayerAirState AirState { get; private set; }
-        public PlayerWallSlideState WallSlideState { get; private set; }
+        //public PlayerWallSlideState WallSlideState { get; private set; }
         public PlayerWallJumpState WallJumpState { get; private set; }
         public PlayerPrimaryAttackState PrimaryAttackState { get; private set; }
         public PlayerDeadState DeadState { get; private set; }
@@ -62,7 +62,7 @@ namespace Game.Player.Scripts
             DashState = new PlayerDashState(this, StateMachine, "Dash");
             JumpState = new PlayerJumpState(this, StateMachine, "Jump");
             AirState = new PlayerAirState(this, StateMachine, "Jump");
-            WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
+            //WallSlideState = new PlayerWallSlideState(this, StateMachine, "WallSlide");
             WallJumpState = new PlayerWallJumpState(this, StateMachine, "Jump");
             PrimaryAttackState = new PlayerPrimaryAttackState(this, StateMachine, "Attack");
             DeadState = new PlayerDeadState(this, StateMachine, "Die");

@@ -50,8 +50,6 @@ namespace Game.Shared.Scripts
                 return;
 
             var totalDamage = damage.GetValue() + strength.GetValue();
-
-            Debug.Log(totalDamage);
             
             if (CanCrit())
                 totalDamage = CalculateCriticalDamage(totalDamage);
