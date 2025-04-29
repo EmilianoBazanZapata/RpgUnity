@@ -1,5 +1,5 @@
 ﻿using Game.Enemies.StateMachine;
-using UnityEngine;
+using Game.Managers;
 
 namespace Game.Enemies.Skeleton.Scripts.States
 {
@@ -17,10 +17,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             base.Enter();
             
-            _enemy.Collider2D.enabled = false;
-            _enemy.Rb.bodyType = RigidbodyType2D.Static;
-            
-            _enemy.HealthBarUI.SetActive(false);
+            GameManager.Instance.EnemyKilled();
         }
     }
 }

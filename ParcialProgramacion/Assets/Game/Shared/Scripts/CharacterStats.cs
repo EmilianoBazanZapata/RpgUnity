@@ -106,7 +106,7 @@ namespace Game.Shared.Scripts
             DecreaseHealthBy(damage);
 
             GetComponent<Entity>().DamageImpact();
-
+            
             if (_currentHealth <= 0 && !isDead)
                 Die();
         }
@@ -152,6 +152,12 @@ namespace Game.Shared.Scripts
                 StatType.armor => armor,
                 _ => null
             };
+        }
+        
+        public void ResetHealth()
+        {
+            _currentHealth = GetMaxHealthValue();
+            isDead = false; 
         }
     }
 }

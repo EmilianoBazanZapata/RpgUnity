@@ -7,11 +7,10 @@ namespace Game.Managers
     {
         public static GameManager Instance { get; private set; }
 
-        [Header("Configuración de victoria")]
+        [Header("VictoryConfiguration")]
         [SerializeField] private int enemiesToKillToWin = 20;
 
         private int _currentEnemiesKilled;
-
         public event Action OnEnemyKilled;
         public event Action OnGameWon;
         public event Action OnGameOver;
@@ -31,8 +30,9 @@ namespace Game.Managers
         public void EnemyKilled()
         {
             _currentEnemiesKilled++;
-            Debug.Log($"Enemigos derrotados: {_currentEnemiesKilled}");
-
+            
+            Debug.Log($"Enemigos muertos: {_currentEnemiesKilled}");
+            
             OnEnemyKilled?.Invoke();
 
             if (_currentEnemiesKilled >= enemiesToKillToWin)
@@ -43,7 +43,6 @@ namespace Game.Managers
 
         public void WinGame()
         {
-            Debug.Log("¡Ganaste el juego!");
             OnGameWon?.Invoke();
         }
 

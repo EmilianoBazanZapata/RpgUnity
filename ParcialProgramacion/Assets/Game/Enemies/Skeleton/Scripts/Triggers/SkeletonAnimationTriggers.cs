@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts.Triggers
 {
-    public class SkeletonAnimationTriggers: MonoBehaviour
+    public class SkeletonAnimationTriggers : MonoBehaviour
     {
         private EnemySkeleton _enemySkeleton => GetComponentInParent<EnemySkeleton>();
 
@@ -20,8 +20,8 @@ namespace Game.Enemies.Skeleton.Scripts.Triggers
             foreach (var hit in colliders)
             {
                 if (hit.GetComponent<Player.Scripts.Player>() == null) continue;
-            
-            
+
+
                 var target = hit.GetComponent<PlayerStats>();
                 _enemySkeleton.Stats.DoDamage(target);
             }
@@ -29,5 +29,6 @@ namespace Game.Enemies.Skeleton.Scripts.Triggers
 
         private void OpenCounterWindow() => _enemySkeleton.OpenCOunterAttackWindow();
         private void CloseCounterWindow() => _enemySkeleton.CloseCounterAttackWindow();
+        public void AnimationDeadTrigger() => _enemySkeleton.NotifyDead();
     }
 }

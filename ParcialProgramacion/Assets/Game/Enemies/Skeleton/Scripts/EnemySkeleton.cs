@@ -13,9 +13,9 @@ namespace Game.Enemies.Skeleton.Scripts
         public SkeletonAttackState AttackState { get; private set; }
         public SkeletonStunnedState StunnedState { get; private set; }
         public SkeletonDeadState DeadState { get; private set; }
-    
+
         #endregion
-    
+
         protected override void Awake()
         {
             base.Awake();
@@ -37,15 +37,15 @@ namespace Game.Enemies.Skeleton.Scripts
         protected override void Update()
         {
             base.Update();
-        
-            if(Input.GetKeyDown(KeyCode.U))
+
+            if (Input.GetKeyDown(KeyCode.U))
                 EnemyStateMachine.ChangeState(StunnedState);
         }
 
         public override bool CanBeStunned()
         {
             if (!base.CanBeStunned()) return false;
-            
+
             EnemyStateMachine.ChangeState(StunnedState);
             return true;
         }
@@ -53,10 +53,30 @@ namespace Game.Enemies.Skeleton.Scripts
         public override void Die()
         {
             base.Die();
-        
             EnemyStateMachine.ChangeState(DeadState);
-            
-            OnDeath?.Invoke();
         }
+
+        #region  Restart Enemy
+        
+        public void NotifyDead()
+        {
+            ResetHealthUI();
+            SetStateByDefault();
+            OnDeath?.Invoke();
+            ReturnToPool();
+        }
+
+        protected override void ReturnToPool()
+        {
+            base.ReturnToPool();
+
+            _pool.ReturnObject(gameObject);
+        }
+
+        private void ResetHealthUI() => Stats.ResetHealth();
+        private void SetStateByDefault() =>  EnemyStateMachine.ChangeState(IdleState);
+
+        #endregion
+        
     }
 }

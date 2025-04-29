@@ -2,6 +2,8 @@
 using System.Collections;
 using Game.Enemies.StateMachine;
 using Game.Shared.Scripts;
+using Game.Spawning;
+using Game.UI.Scripts;
 using UnityEngine;
 
 namespace Game.Enemies
@@ -26,8 +28,10 @@ namespace Game.Enemies
 
         public EnemyStateMachine EnemyStateMachine { get; private set; }
         public string lastAnimBoolName { get; private set; }
-        [SerializeField] public GameObject HealthBarUI;
-        protected Action OnDeath;
+        [SerializeField] public HealthBarUI HealthBarUI;
+        public Action OnDeath;
+        public bool WasDeadBeforeRespawn { get; set; }
+        public ObjectPoolEnemy _pool;
         
         protected override void Awake()
         {
@@ -127,5 +131,20 @@ namespace Game.Enemies
         }
         
         public void SubscribeOnDeath(Action callback) => OnDeath += callback;
+        
+        protected virtual void ReturnToPool()
+        {
+            
+        }
+        
+        public void SetPool(ObjectPoolEnemy pool)
+        {
+            _pool = pool;
+        }
+
+        public void ResetUIHealth()
+        {
+            HealthBarUI.ResetHealtUIValue();
+        }
     }
 }

@@ -1,48 +1,72 @@
-﻿using Game.Enemies;
+﻿using System.Collections.Generic;
+using Game.Enemies;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Spawning
-{ 
+{
     public class EnemySpawner : MonoBehaviour
     {
-        [Header("Configuración del Spawner")]
-        [SerializeField] private GameObject enemyPrefab;
-        [SerializeField] private Transform spawnPoint;
-        [SerializeField] private bool spawnOnStart = true;
-        [SerializeField] private float spawnDelay = 0f;
+        [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private GameObject _enemyPrefab;
+        [SerializeField] private int _maxEnemies = 10;
+        [SerializeField] private float _spawnDelay = 2f;
+        private List<GameObject> _activeEnemies = new();
+        private ObjectPoolEnemy _poolEnemy;
 
-        [Header("Control de cantidad")]
-        [SerializeField] private int maxEnemies = 1;
-        private int _currentEnemiesAlive = 0;
-
-        [Header("Pool")]
-        [SerializeField] private EnemyPool enemyPool;
+        private void Awake()
+        {
+            _poolEnemy = GetComponent<ObjectPoolEnemy>();
+        }
 
         private void Start()
         {
-            if (spawnOnStart)
+            StartCoroutine(SpawnLoop());
+        }
+
+        private IEnumerator<WaitForSeconds> SpawnLoop()
+        {
+            while (true)
             {
-                Invoke(nameof(SpawnEnemy), spawnDelay);
+                yield return new WaitForSeconds(_spawnDelay);
+                TrySpawnEnemy();
             }
         }
 
-        public void SpawnEnemy()
+        private void TrySpawnEnemy()
         {
-            if (_currentEnemiesAlive >= maxEnemies)
-                return;
+            if (_activeEnemies.Count >= _maxEnemies) return;
 
-            GameObject enemyGO = enemyPool.GetEnemy(spawnPoint.position);
-            _currentEnemiesAlive++;
+            var spawnPoint = GetRandomFreeSpawnPoint();
+            if (spawnPoint == null) return;
 
-            Enemy enemyScript = enemyGO.GetComponent<Enemy>();
-            if (enemyScript != null)
+            var enemy = _poolEnemy.GetObject();
+            enemy.transform.position = spawnPoint.position;
+            enemy.SetActive(true);
+
+            var enemyScript = enemy.GetComponent<Enemy>();
+            enemyScript.OnDeath = () =>
             {
-                enemyScript.SubscribeOnDeath(() =>
-                {
-                    _currentEnemiesAlive--;
-                    Invoke(nameof(SpawnEnemy), spawnDelay); // respawn automático
-                });
+                _activeEnemies.Remove(enemy);
+                _poolEnemy.ReturnObject(enemy);
+            };
+
+            _activeEnemies.Add(enemy);
+        }
+
+        private Transform GetRandomFreeSpawnPoint()
+        {
+            List<Transform> available = new();
+
+            foreach (var point in _spawnPoints)
+            {
+                var occupied = _activeEnemies.Exists(e =>
+                    Vector2.Distance(e.transform.position, point.position) < 0.1f);
+                if (!occupied)
+                    available.Add(point);
             }
+
+            return available.Count == 0 ? null : available[Random.Range(0, available.Count)];
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Game.Shared.Scripts
         public float attackCheckRadius;
 
         protected bool FacingRight = true;
-        public int FacingDir { get; private set; } = 1;
+        public int FacingDir { get; set; } = 1;
         public Action OnFlipped;
 
         [Header("Agro Settings")] public float agroDistance = 2;

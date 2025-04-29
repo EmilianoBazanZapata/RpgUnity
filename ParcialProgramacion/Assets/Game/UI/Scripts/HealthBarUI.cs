@@ -4,40 +4,44 @@ using UnityEngine.UI;
 
 namespace Game.UI.Scripts
 {
-    public class HealthBarUI: MonoBehaviour
+    public class HealthBarUI : MonoBehaviour
     {
         private Entity _entity;
         private CharacterStats _characterStats;
         private RectTransform _transform;
         private Slider _slider;
 
-        private void Start()
+        private bool _initialized;
+
+        private void Update()
         {
             _transform = GetComponent<RectTransform>();
             _entity = GetComponentInParent<Entity>();
             _slider = GetComponentInChildren<Slider>();
             _characterStats = GetComponentInParent<CharacterStats>();
-
-            _entity.OnFlipped += FlipUI;
-
-            _characterStats._onHealthChanged += UpdateHealthUI;
-
+            
+            if (_characterStats != null)
+                _characterStats._onHealthChanged += UpdateHealthUI;
+            
             UpdateHealthUI();
+            
+            _initialized = true;
         }
 
         private void UpdateHealthUI()
         {
+            if (_slider == null || _characterStats == null) return;
+            
             _slider.maxValue = _characterStats.GetMaxHealthValue();
             _slider.value = _characterStats.GetHealt();
         }
 
-        private void FlipUI() => _transform.Rotate(0, 180, 0);
-
-        private void OnDisable()
+        public void ResetHealtUIValue()
         {
-            _entity.OnFlipped -= FlipUI;
-            _characterStats._onHealthChanged -= UpdateHealthUI;
-        }
+            if (_slider == null || _characterStats == null) return;
 
+            _slider.maxValue = _characterStats.GetMaxHealthValue();
+            _slider.value = _characterStats.GetMaxHealthValue();
+        }
     }
 }
