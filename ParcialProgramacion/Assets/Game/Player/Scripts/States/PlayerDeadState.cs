@@ -1,4 +1,5 @@
-﻿using Game.Player.Scripts.StateMachine;
+﻿using Game.Managers;
+using Game.Player.Scripts.StateMachine;
 
 namespace Game.Player.Scripts.States
 {
@@ -15,6 +16,8 @@ namespace Game.Player.Scripts.States
             base.Update();
 
             Player.SetZeroVelocity();
+            
+            GameManager.Instance.LoseGame();
         }
     }
 }
