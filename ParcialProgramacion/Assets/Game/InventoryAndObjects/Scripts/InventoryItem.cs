@@ -1,7 +1,7 @@
 ﻿using System;
-using Game.Inventory.ScriptableObjects;
+using Game.InventoryAndObjects.ScriptableObjects;
 
-namespace Game.Inventory.Scripts
+namespace Game.InventoryAndObjects.Scripts
 {
     [Serializable]
     public class InventoryItem

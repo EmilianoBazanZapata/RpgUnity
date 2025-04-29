@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using Game.Inventory.ScriptableObjects;
+using Game.InventoryAndObjects.ScriptableObjects;
 using Game.Player.Scripts;
 using Game.Player.Scripts.Managers;
 using Game.Shared.Enums;
 using UnityEngine;
 
-namespace Game.Inventory.Scripts
+namespace Game.InventoryAndObjects.Scripts
 {
     [CreateAssetMenu(fileName = "new Equipment Item Data", menuName = "Data/Equipment")]
     public class ItemDataEquipment : ItemData
