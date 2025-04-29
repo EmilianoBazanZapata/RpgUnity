@@ -1,5 +1,4 @@
 ﻿using Game.Enemies.StateMachine;
-using Game.Managers;
 using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts.States
@@ -22,8 +21,6 @@ namespace Game.Enemies.Skeleton.Scripts.States
             _enemy.Rb.bodyType = RigidbodyType2D.Static;
             
             _enemy.HealthBarUI.SetActive(false);
-            
-            GameManager.Instance.EnemyKilled();
         }
     }
 }

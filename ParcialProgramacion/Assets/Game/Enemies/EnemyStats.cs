@@ -1,4 +1,5 @@
-﻿using Game.Shared.Scripts;
+﻿using System;
+using Game.Shared.Scripts;
 using UnityEngine;
 
 namespace Game.Enemies

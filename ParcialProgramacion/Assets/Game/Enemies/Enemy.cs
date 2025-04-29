@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.Enemies.StateMachine;
 using Game.Shared.Scripts;
 using UnityEngine;
@@ -26,7 +27,8 @@ namespace Game.Enemies
         public EnemyStateMachine EnemyStateMachine { get; private set; }
         public string lastAnimBoolName { get; private set; }
         [SerializeField] public GameObject HealthBarUI;
-
+        protected Action OnDeath;
+        
         protected override void Awake()
         {
             base.Awake();
@@ -123,5 +125,7 @@ namespace Game.Enemies
             Gizmos.DrawLine(transform.position,
                 new Vector3(transform.position.x + attackDistance * FacingDir, transform.position.y));
         }
+        
+        public void SubscribeOnDeath(Action callback) => OnDeath += callback;
     }
 }

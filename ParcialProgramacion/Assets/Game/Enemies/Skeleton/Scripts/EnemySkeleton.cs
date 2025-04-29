@@ -55,6 +55,8 @@ namespace Game.Enemies.Skeleton.Scripts
             base.Die();
         
             EnemyStateMachine.ChangeState(DeadState);
+            
+            OnDeath?.Invoke();
         }
     }
 }
