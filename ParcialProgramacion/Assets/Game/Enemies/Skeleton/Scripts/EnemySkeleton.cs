@@ -1,4 +1,5 @@
 ﻿using Game.Enemies.Skeleton.Scripts.States;
+using Game.Managers;
 using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts
@@ -60,6 +61,7 @@ namespace Game.Enemies.Skeleton.Scripts
         
         public void NotifyDead()
         {
+            GameManager.Instance.EnemyKilled();
             ResetHealthUI();
             SetStateByDefault();
             OnDeath?.Invoke();

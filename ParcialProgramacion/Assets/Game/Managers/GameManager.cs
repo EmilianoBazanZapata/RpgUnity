@@ -6,10 +6,11 @@ namespace Game.Managers
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private int _enemiesToKillForVictory = 20;
+        private int _currentKills = 0;
+        
         public static GameManager Instance { get; private set; }
-
         public GameState CurrentState { get; private set; }
-
         public event Action<GameState> OnGameStateChanged;
 
         private void Awake()
@@ -30,8 +31,19 @@ namespace Game.Managers
             if (newState == CurrentState) return;
 
             CurrentState = newState;
-            Debug.Log("Jugador ha muerto. Cambiando a GameOver");
             OnGameStateChanged?.Invoke(CurrentState);
+        }
+        
+        public void EnemyKilled()
+        {
+            _currentKills++;
+
+            Debug.Log($"Enemy killed: {_currentKills}/{_enemiesToKillForVictory}");
+
+            if (_currentKills >= _enemiesToKillForVictory)
+            {
+                WinGame();
+            }
         }
         
         public void StartGame() => SetGameState(GameState.InGame);
