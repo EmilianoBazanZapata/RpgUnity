@@ -7,7 +7,6 @@ public class DeadZone : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("Jugador cayó en el pozo!");
             GameManager.Instance.LoseGame();
         }
     }

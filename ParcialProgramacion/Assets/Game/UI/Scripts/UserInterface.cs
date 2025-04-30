@@ -1,124 +1,105 @@
-﻿using System.Collections;
+﻿using System;
+using Game.Managers;
+using Game.Shared.Enums;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game.UI.Scripts
 {
     public class UserInterface : MonoBehaviour
     {
-        [Header("End screen")]
-        // [SerializeField] private UI_FadeScreen fadeScreen;
-        // [SerializeField] private GameObject endText;
-        // [SerializeField] private GameObject restartButton;
-        [Space]
-        [SerializeField]
-        private GameObject charcaterUI;
-        
+        [Header("Pantallas")] [SerializeField] private GameObject mainMenuUI;
+        [SerializeField] private GameObject inGameUI;
+        [SerializeField] private GameObject victoryUI;
+        [SerializeField] private GameObject gameOverUI;
+
+        [Header("Sub-UIs")] [SerializeField] private GameObject characterUI;
         [SerializeField] private GameObject craftUI;
         [SerializeField] private GameObject optionsUI;
-        [SerializeField] private GameObject inGameUI;
         [SerializeField] private GameObject inControlUI;
-
 
         public ItemTooltip itemToolTip;
         public StatToolTip statToolTip;
         public CraftWindow craftWindow;
-        //
-        // [SerializeField] private UI_VolumeSlider[] volumeSettings;
 
+        private void Start()
+        {
+            GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            HandleGameStateChanged(GameManager.Instance.CurrentState);
+        }
 
         private void Awake()
         {
-            SwitchTo(inGameUI); // we need this to assign events on skill tree slots before we asssign events on skill scripts
-            //fadeScreen.gameObject.SetActive(true);
+            ShowOnly(mainMenuUI); // Estado inicial
         }
 
-        void Start()
+        private void Update()
         {
-            SwitchTo(inGameUI);
-
-            // itemToolTip.gameObject.SetActive(false);
-            // statToolTip.gameObject.SetActive(false);
+            if (Input.GetKeyDown(KeyCode.P))
+                GameManager.Instance.GoToOptions();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void ToggleUI(GameObject ui)
         {
-            if (Input.GetKeyDown(KeyCode.C))
-                SwitchWithKeyTo(charcaterUI);
-
-            if (Input.GetKeyDown(KeyCode.B))
-                SwitchWithKeyTo(craftUI);
-
-
-            // if (Input.GetKeyDown(KeyCode.K))
-            //     SwitchWithKeyTo(skillTreeUI);
-
-            if (Input.GetKeyDown(KeyCode.O))
-                SwitchWithKeyTo(optionsUI);
+            if (ui != null)
+                ui.SetActive(!ui.activeSelf);
         }
 
-        public void SwitchTo(GameObject _menu)
+        private void HandleGameStateChanged(GameState state)
         {
-            for (int i = 0; i < transform.childCount; i++)
+            switch (state)
             {
-                bool fadeScreen =
-                    transform.GetChild(i).GetComponent<FadeScreen>() !=
-                    null;
-            
-                if (fadeScreen == false)
-                    transform.GetChild(i).gameObject.SetActive(false);
-                
-                if (transform.GetChild(i).gameObject.name == _menu.name)
-                    //AudioManager.instance.PlaySFX(5, null);
-                    transform.GetChild(i).gameObject.SetActive(true);
+                case GameState.MainMenu:
+                    ShowOnly(mainMenuUI);
+                    break;
+                case GameState.InGame:
+                    ReloadCurrentScene();
+                    break;
+                case GameState.Victory:
+                    ShowOnly(victoryUI);
+                    break;
+                case GameState.GameOver:
+                    ShowOnly(gameOverUI);
+                    break;
+                case GameState.InControls:
+                    ShowOnly(inControlUI);
+                    break;
+                case GameState.InOptions:
+                    ShowOnly(optionsUI);
+                    break;
+                case GameState.InCharacter:
+                    ShowOnly(characterUI);
+                    break;
+                case GameState.InCraft:
+                    ShowOnly(craftUI);
+                    break;
+                case GameState.ResumeGame:
+                    ShowOnly(inGameUI);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
-            // if (GameManager.instance != null)
-            // {
-            //     if (_menu == inGameUI)
-            //         GameManager.instance.PauseGame(false);
-            //     else
-            //         GameManager.instance.PauseGame(true);
-            // }
         }
 
-        public void SwitchWithKeyTo(GameObject _menu)
+        public void ShowOnly(GameObject uiToShow)
         {
-            if (_menu != null && _menu.activeSelf)
+            foreach (Transform child in transform)
             {
-                _menu.SetActive(false);
-                CheckForInGameUI();
-                return;
+                child.gameObject.SetActive(child.gameObject == uiToShow);
             }
-
-            SwitchTo(_menu);
         }
-
-        private void CheckForInGameUI()
+        
+        private void ReloadCurrentScene()
         {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                if (transform.GetChild(i).gameObject.activeSelf &&
-                    transform.GetChild(i).GetComponent<FadeScreen>() == null)
-                    return;
-            }
-
-            SwitchTo(inGameUI);
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            var currentScene = SceneManager.GetActiveScene();
+            SceneManager.LoadScene(currentScene.name);
         }
 
-        public void SwitchOnEndScreen()
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            //fadeScreen.FadeOut();
-            StartCoroutine(EndScreenCorutione());
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            GameManager.Instance.ResumeGame();
         }
-
-        IEnumerator EndScreenCorutione()
-        {
-            yield return new WaitForSeconds(1);
-            //endText.SetActive(true);
-            yield return new WaitForSeconds(1.5f);
-            //restartButton.SetActive(true);
-        }
-
-        //public void RestartGameButton() => GameManager.instance.RestartScene();
     }
 }

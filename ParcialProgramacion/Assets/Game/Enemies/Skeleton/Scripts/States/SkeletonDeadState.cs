@@ -17,7 +17,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             base.Enter();
             
-            GameManager.Instance.EnemyKilled();
+            // GameManager.Instance.EnemyKilled();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Game.Managers;
 using Game.Player.Scripts.StateMachine;
+using UnityEngine;
 
 namespace Game.Player.Scripts.States
 {
@@ -16,7 +17,7 @@ namespace Game.Player.Scripts.States
             base.Update();
 
             Player.SetZeroVelocity();
-            
+Debug.Log("Dead");
             GameManager.Instance.LoseGame();
         }
     }

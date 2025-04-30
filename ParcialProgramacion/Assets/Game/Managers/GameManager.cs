@@ -1,4 +1,5 @@
 ﻿using System;
+using Game.Shared.Enums;
 using UnityEngine;
 
 namespace Game.Managers
@@ -7,49 +8,41 @@ namespace Game.Managers
     {
         public static GameManager Instance { get; private set; }
 
-        [Header("VictoryConfiguration")]
-        [SerializeField] private int enemiesToKillToWin = 20;
+        public GameState CurrentState { get; private set; }
 
-        private int _currentEnemiesKilled;
-        public event Action OnEnemyKilled;
-        public event Action OnGameWon;
-        public event Action OnGameOver;
+        public event Action<GameState> OnGameStateChanged;
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
             {
                 Destroy(gameObject);
-                return;
-            }
-            
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
-        public void EnemyKilled()
-        {
-            _currentEnemiesKilled++;
-            
-            Debug.Log($"Enemigos muertos: {_currentEnemiesKilled}");
-            
-            OnEnemyKilled?.Invoke();
-
-            if (_currentEnemiesKilled >= enemiesToKillToWin)
-            {
-                WinGame();
             }
         }
 
-        public void WinGame()
+        public void SetGameState(GameState newState)
         {
-            OnGameWon?.Invoke();
-        }
+            if (newState == CurrentState) return;
 
-        public void LoseGame()
-        {
-            Debug.Log("¡Perdiste el juego!");
-            OnGameOver?.Invoke();
+            CurrentState = newState;
+            Debug.Log("Jugador ha muerto. Cambiando a GameOver");
+            OnGameStateChanged?.Invoke(CurrentState);
         }
+        
+        public void StartGame() => SetGameState(GameState.InGame);
+        public void WinGame() => SetGameState(GameState.Victory);
+        public void LoseGame() => SetGameState(GameState.GameOver);
+        public void GoToMenu() => SetGameState(GameState.MainMenu);
+        public void GoToControl() => SetGameState(GameState.InControls);        
+        public void GoToOptions() => SetGameState(GameState.InOptions);
+        public void GoToCharacter() => SetGameState(GameState.InCharacter);
+        public void GoToCraft() => SetGameState(GameState.InCraft);
+        public void ResumeGame() => SetGameState(GameState.ResumeGame);
+
     }
 }
