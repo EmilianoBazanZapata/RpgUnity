@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Game.InventoryAndObjects.Scripts;
 using Game.Managers;
 using Game.Player.Scripts.Inputs;
 using Game.Player.Scripts.Managers;
@@ -97,6 +98,9 @@ namespace Game.Player.Scripts
             
             if (Input.GetKeyDown(KeyCode.F))
                 Skill.CrystalSkill.CanUseSkill();
+            
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+                Inventory.instance.UseFlask();
         }
         
         private void CheckForDashInput()

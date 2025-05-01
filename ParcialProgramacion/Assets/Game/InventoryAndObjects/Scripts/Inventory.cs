@@ -24,7 +24,7 @@ namespace Game.InventoryAndObjects.Scripts
     private Transform _inventorySlotParent;
     [SerializeField] private Transform _stashSlotParent;
     [SerializeField] private Transform _equipmentSlotParent;
-    private ItemSlot[] _inventoryItemSlots;
+    [SerializeField] private ItemSlot[] _inventoryItemSlots;
     private ItemSlot[] _stashItemSlots;
     private EquipmentSlot[] _equipmentItemSlots;
     private ItemDataEquipment _oldEquipment;
@@ -243,6 +243,7 @@ namespace Game.InventoryAndObjects.Scripts
             }
             else
             {
+                SoundManager.Instance.PlaySound(SoundType.ErrorCraft);
                 Debug.Log("Material not found in stash");
                 return false;
             }

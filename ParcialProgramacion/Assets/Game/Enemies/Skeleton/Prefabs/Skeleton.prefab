@@ -729,6 +729,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleDrop:
   - {fileID: 11400000, guid: 0d425132bb760ec44b07eccdfc0d2086, type: 2}
+  - {fileID: 11400000, guid: 584098b26d1df374f8a23d3b4da4781b, type: 2}
+  - {fileID: 11400000, guid: 61d74b0fd361d384fa76c9cb6a90f128, type: 2}
   _drop: []
   _dropPrefab: {fileID: 2490745344909398832, guid: e3c641c7988a6d94cbaead01536b7e5a, type: 3}
   _item: {fileID: 11400000, guid: 0d425132bb760ec44b07eccdfc0d2086, type: 2}

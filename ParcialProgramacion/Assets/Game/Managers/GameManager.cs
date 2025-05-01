@@ -1,13 +1,16 @@
 ﻿using System;
 using Game.Shared.Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Managers
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private int _enemiesToKillForVictory = 20;
-        private int _currentKills = 0;
+        public int EnemiesToKillForVictory = 20;
+        public int CurrentKills = 0;
+        public event Action<int, int> OnEnemyKillProgress;
+        
         
         public static GameManager Instance { get; private set; }
         public GameState CurrentState { get; private set; }
@@ -36,11 +39,11 @@ namespace Game.Managers
         
         public void EnemyKilled()
         {
-            _currentKills++;
+            CurrentKills++;
 
-            Debug.Log($"Enemy killed: {_currentKills}/{_enemiesToKillForVictory}");
+            OnEnemyKillProgress?.Invoke(CurrentKills, EnemiesToKillForVictory);
 
-            if (_currentKills >= _enemiesToKillForVictory)
+            if (CurrentKills >= EnemiesToKillForVictory)
             {
                 WinGame();
             }
