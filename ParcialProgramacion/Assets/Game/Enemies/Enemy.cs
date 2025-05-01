@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using Game.Enemies.StateMachine;
+using Game.Managers;
+using Game.Shared.Enums;
 using Game.Shared.Scripts;
 using Game.Spawning;
 using Game.UI.Scripts;
@@ -46,6 +48,8 @@ namespace Game.Enemies
         {
             base.Update();
 
+            if (GameManager.Instance.CurrentState != GameState.InGame) return;
+            
             EnemyStateMachine.CurrentState.Update();
         }
 

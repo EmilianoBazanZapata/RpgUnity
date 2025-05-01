@@ -18,8 +18,6 @@ namespace Game.Player.Scripts.States
             base.Update();
 
             Player.SetZeroVelocity();
-            SoundManager.Instance.PlaySound(SoundType.PlayerDeath);
-            
             GameManager.Instance.LoseGame();
         }
     }

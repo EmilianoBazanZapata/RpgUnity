@@ -46,7 +46,7 @@ namespace Game.Managers
             }
         }
         
-        public void StartGame() => SetGameState(GameState.InGame);
+        public void StartGame() => SetGameState(GameState.StartGame);
         public void WinGame() => SetGameState(GameState.Victory);
         public void LoseGame() => SetGameState(GameState.GameOver);
         public void GoToMenu() => SetGameState(GameState.MainMenu);
@@ -54,7 +54,7 @@ namespace Game.Managers
         public void GoToOptions() => SetGameState(GameState.InOptions);
         public void GoToCharacter() => SetGameState(GameState.InCharacter);
         public void GoToCraft() => SetGameState(GameState.InCraft);
-        public void ResumeGame() => SetGameState(GameState.ResumeGame);
-
+        public void ResumeGame() => SetGameState(GameState.InGame);
+        public void InGame() => SetGameState(GameState.InGame);
     }
 }

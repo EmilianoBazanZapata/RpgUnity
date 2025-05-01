@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Enemies;
+using Game.Managers;
+using Game.Shared.Enums;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -31,7 +33,9 @@ namespace Game.Spawning
 
         private void Update()
         {
-            float distance = Vector2.Distance(transform.position, _player.transform.position);
+            if (GameManager.Instance.CurrentState != GameState.InGame) return;
+            
+            var distance = Vector2.Distance(transform.position, _player.transform.position);
 
             // Si todos murieron, iniciar el cooldown si aún no está corriendo
             if (_currentEnemies.Count == 0 && !_allEnemiesDead)

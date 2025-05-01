@@ -1,8 +1,10 @@
 ﻿using System.Collections;
+using Game.Managers;
 using Game.Player.Scripts.Inputs;
 using Game.Player.Scripts.Managers;
 using Game.Player.Scripts.StateMachine;
 using Game.Player.Scripts.States;
+using Game.Shared.Enums;
 using Game.Shared.Scripts;
 using UnityEngine;
 
@@ -86,6 +88,8 @@ namespace Game.Player.Scripts
         protected override void Update()
         {
             base.Update();
+            
+            if (GameManager.Instance.CurrentState != GameState.InGame) return;
 
             StateMachine.CurrentState.Update();
 

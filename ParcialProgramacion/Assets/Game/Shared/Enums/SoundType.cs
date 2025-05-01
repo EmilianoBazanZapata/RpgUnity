@@ -10,6 +10,7 @@
         Craft,
         ButtonClick,
         BackgroundMusic,
-        ErrorCraft
+        ErrorCraft,
+        OptionMusic
     }
 }

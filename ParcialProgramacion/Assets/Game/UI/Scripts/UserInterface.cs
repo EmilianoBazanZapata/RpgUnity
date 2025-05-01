@@ -35,8 +35,12 @@ namespace Game.UI.Scripts
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.P) && GameManager.Instance.CurrentState == GameState.InGame)
+            {
                 GameManager.Instance.GoToOptions();
+                SoundManager.Instance.PauseMusic();
+                SoundManager.Instance.PlaySound(SoundType.OptionMusic);
+            }
         }
 
         private void ToggleUI(GameObject ui)
@@ -52,7 +56,7 @@ namespace Game.UI.Scripts
                 case GameState.MainMenu:
                     ShowOnly(mainMenuUI);
                     break;
-                case GameState.InGame:
+                case GameState.StartGame:
                     ReloadCurrentScene();
                     break;
                 case GameState.Victory:
@@ -76,6 +80,9 @@ namespace Game.UI.Scripts
                 case GameState.ResumeGame:
                     ShowOnly(inGameUI);
                     break;
+                case GameState.InGame:
+                    ShowOnly(inGameUI);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
@@ -88,7 +95,7 @@ namespace Game.UI.Scripts
                 child.gameObject.SetActive(child.gameObject == uiToShow);
             }
         }
-        
+
         private void ReloadCurrentScene()
         {
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -99,7 +106,7 @@ namespace Game.UI.Scripts
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
-            GameManager.Instance.ResumeGame();
+            GameManager.Instance.InGame();
             SoundManager.Instance.StartBackgroundMusic();
         }
     }

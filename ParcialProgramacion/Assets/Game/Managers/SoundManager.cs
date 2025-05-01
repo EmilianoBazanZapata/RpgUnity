@@ -13,6 +13,9 @@ namespace Game.Managers
         [SerializeField] private AudioSource sfxSource;
 
         [Header("Audio Clips")] public AudioClip backgroundMusic;
+        public AudioClip optionsMusic;
+        public AudioClip gameOverMusic;
+        public AudioClip victoryMusic;
         public AudioClip buttonClick;
         public AudioClip craftSound;
         public AudioClip attackSound;
@@ -30,6 +33,12 @@ namespace Game.Managers
             }
             else
                 Destroy(gameObject);
+        }
+        
+        private void Start()
+        {
+            GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
+            HandleGameStateChanged(GameManager.Instance.CurrentState);
         }
 
         private void PlaySFX(AudioClip clip)
@@ -75,6 +84,25 @@ namespace Game.Managers
                     break;
                 case SoundType.ErrorCraft:
                     PlaySFX(errorCraftSound);
+                    break;
+                case SoundType.OptionMusic:
+                    PlayMusic(optionsMusic);
+                    break;
+            }
+        }
+        
+        private void HandleGameStateChanged(GameState state)
+        {
+            switch (state)
+            {
+                case GameState.GameOver:
+                    PlayMusic(gameOverMusic);
+                    break;
+                case GameState.Victory:
+                    PlayMusic(victoryMusic);
+                    break;
+                case GameState.InGame:
+                    PlayMusic(backgroundMusic);
                     break;
             }
         }

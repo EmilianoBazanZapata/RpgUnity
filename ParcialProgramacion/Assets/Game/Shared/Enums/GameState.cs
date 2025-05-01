@@ -3,6 +3,7 @@
     public enum GameState
     {
         MainMenu,
+        StartGame,
         InGame,
         Victory,
         GameOver,
