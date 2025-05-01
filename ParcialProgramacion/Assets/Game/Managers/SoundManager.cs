@@ -1,23 +1,25 @@
-﻿using UnityEngine;
+﻿using Game.Shared.Enums;
+using UnityEngine;
 
 namespace Game.Managers
 {
-    public class SoundManager: MonoBehaviour
+    public class SoundManager : MonoBehaviour
     {
         public static SoundManager Instance { get; private set; }
 
-        [Header("Audio Sources")]
-        [SerializeField] private AudioSource musicSource;
+        [Header("Audio Sources")] [SerializeField]
+        private AudioSource musicSource;
+
         [SerializeField] private AudioSource sfxSource;
 
-        [Header("Audio Clips")]
-        public AudioClip backgroundMusic;
+        [Header("Audio Clips")] public AudioClip backgroundMusic;
         public AudioClip buttonClick;
         public AudioClip craftSound;
         public AudioClip attackSound;
         public AudioClip enemyHitSound;
         public AudioClip enemyDeathSound;
         public AudioClip playerDeathSound;
+        public AudioClip errorCraftSound;
 
         private void Awake()
         {
@@ -30,18 +32,13 @@ namespace Game.Managers
                 Destroy(gameObject);
         }
 
-        private void Start()
-        {
-            PlayMusic(backgroundMusic);
-        }
-
-        public void PlaySFX(AudioClip clip)
+        private void PlaySFX(AudioClip clip)
         {
             if (clip != null)
                 sfxSource.PlayOneShot(clip);
         }
 
-        public void PlayMusic(AudioClip clip)
+        private void PlayMusic(AudioClip clip)
         {
             if (clip != null)
             {
@@ -51,7 +48,52 @@ namespace Game.Managers
             }
         }
 
+        public void PlaySound(SoundType soundType)
+        {
+            switch (soundType)
+            {
+                case SoundType.BackgroundMusic:
+                    PlayMusic(backgroundMusic);
+                    break;
+                case SoundType.ButtonClick:
+                    PlaySFX(buttonClick);
+                    break;
+                case SoundType.Craft:
+                    PlaySFX(craftSound);
+                    break;
+                case SoundType.Attack:
+                    PlaySFX(attackSound);
+                    break;
+                case SoundType.EnemyHit:
+                    PlaySFX(enemyHitSound);
+                    break;
+                case SoundType.EnemyDeath:
+                    PlaySFX(enemyDeathSound);
+                    break;
+                case SoundType.PlayerDeath:
+                    PlaySFX(playerDeathSound);
+                    break;
+                case SoundType.ErrorCraft:
+                    PlaySFX(errorCraftSound);
+                    break;
+            }
+        }
+
+        public void PauseMusic()
+        {
+            if (musicSource.isPlaying)
+                musicSource.Pause();
+        }
+
+        public void ResumeMusic()
+        {
+            if (!musicSource.isPlaying)
+                musicSource.UnPause();
+        }
+
         public void SetSFXVolume(float volume) => sfxSource.volume = volume;
         public void SetMusicVolume(float volume) => musicSource.volume = volume;
+        public void PlayButtonEffect() => PlaySFX(buttonClick);
+        public void StartBackgroundMusic() => PlayMusic(backgroundMusic);
     }
 }

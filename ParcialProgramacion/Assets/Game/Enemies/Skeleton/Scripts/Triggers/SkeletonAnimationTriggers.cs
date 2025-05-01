@@ -1,4 +1,6 @@
-﻿using Game.Player.Scripts;
+﻿using Game.Managers;
+using Game.Player.Scripts;
+using Game.Shared.Enums;
 using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts.Triggers
@@ -25,6 +27,8 @@ namespace Game.Enemies.Skeleton.Scripts.Triggers
                 var target = hit.GetComponent<PlayerStats>();
                 _enemySkeleton.Stats.DoDamage(target);
             }
+            
+            SoundManager.Instance.PlaySound(SoundType.EnemyHit);
         }
 
         private void OpenCounterWindow() => _enemySkeleton.OpenCOunterAttackWindow();

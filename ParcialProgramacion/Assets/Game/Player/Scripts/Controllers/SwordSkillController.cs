@@ -1,4 +1,6 @@
 ﻿using Game.Enemies;
+using Game.Managers;
+using Game.Shared.Enums;
 using Game.Shared.Scripts;
 using UnityEngine;
 
@@ -92,6 +94,7 @@ namespace Game.Player.Scripts.Controllers
             if (collision.TryGetComponent<Enemy>(out var enemy))
             {
                 SwordSkillDamage(enemy);
+                SoundManager.Instance.PlaySound(SoundType.Attack);
             }
 
             StuckInto(collision);

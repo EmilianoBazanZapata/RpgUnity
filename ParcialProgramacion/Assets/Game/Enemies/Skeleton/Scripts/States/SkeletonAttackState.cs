@@ -14,6 +14,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             _enemySkeleton = enemySkeleton;
         }
+        
         public override void Exit()
         {
             base.Exit();

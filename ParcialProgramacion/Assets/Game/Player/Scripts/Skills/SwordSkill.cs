@@ -87,7 +87,7 @@ namespace Game.Player.Scripts.Skills
 
         private Vector2 DotsPosition(float t)
         {
-            Vector2 position = (Vector2)Player.transform.position + new Vector2(
+            var position = (Vector2)Player.transform.position + new Vector2(
                 AimDirection().normalized.x * _launchForce.x,
                 AimDirection().normalized.y * _launchForce.y) * t + .5f * (Physics2D.gravity * _swordGravity) * (t * t);
 

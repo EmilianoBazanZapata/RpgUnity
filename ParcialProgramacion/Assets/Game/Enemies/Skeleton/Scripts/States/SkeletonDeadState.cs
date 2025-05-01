@@ -1,5 +1,6 @@
 ﻿using Game.Enemies.StateMachine;
 using Game.Managers;
+using Game.Shared.Enums;
 
 namespace Game.Enemies.Skeleton.Scripts.States
 {
@@ -11,6 +12,13 @@ namespace Game.Enemies.Skeleton.Scripts.States
             EnemySkeleton enemy) : base(enemyBase, enemyStateMachine, animBoolName)
         {
             _enemy = enemy;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();   
+            
+            SoundManager.Instance.PlaySound(SoundType.EnemyDeath);
         }
     }
 }

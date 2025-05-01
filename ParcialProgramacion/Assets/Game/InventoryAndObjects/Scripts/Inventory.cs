@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Game.InventoryAndObjects.ScriptableObjects;
+using Game.Managers;
 using Game.Shared.Enums;
 using Game.UI.Scripts;
 using UnityEngine;
@@ -229,12 +230,15 @@ namespace Game.InventoryAndObjects.Scripts
             {
                 if (stashValue.stackSize < required.stackSize)
                 {
+                    SoundManager.Instance.PlaySound(SoundType.ErrorCraft);
+
                     Debug.Log("Not enough materials");
                     return false;
                 }
                 else
                 {
                     materialsToRemove.Add(required);
+                    SoundManager.Instance.PlaySound(SoundType.Craft);
                 }
             }
             else

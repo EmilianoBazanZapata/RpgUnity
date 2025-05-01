@@ -1,5 +1,7 @@
 ﻿using Game.Enemies;
+using Game.Managers;
 using Game.Player.Scripts.StateMachine;
+using Game.Shared.Enums;
 using UnityEngine;
 
 namespace Game.Player.Scripts.States
@@ -20,6 +22,7 @@ namespace Game.Player.Scripts.States
             _canCreateClone = true;
             StateTimer = Player.CounterAttackDuration;
             Player.Anim.SetBool("SuccessfullCounterAttack", false);
+            SoundManager.Instance.PlaySound(SoundType.Attack);
         }
 
         public override void Update()

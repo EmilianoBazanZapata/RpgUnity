@@ -100,6 +100,7 @@ namespace Game.UI.Scripts
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
             GameManager.Instance.ResumeGame();
+            SoundManager.Instance.StartBackgroundMusic();
         }
     }
 }
