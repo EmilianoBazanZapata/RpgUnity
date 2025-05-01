@@ -49,6 +49,17 @@ namespace Game.Managers
             }
         }
         
+        public void QuitGame()
+        {
+#if UNITY_EDITOR
+            // Solo funciona dentro del editor
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+    // Para builds compiladas
+    Application.Quit();
+#endif
+        }
+        
         public void StartGame() => SetGameState(GameState.StartGame);
         public void WinGame() => SetGameState(GameState.Victory);
         public void LoseGame() => SetGameState(GameState.GameOver);
