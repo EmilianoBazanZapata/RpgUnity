@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.InventoryAndObjects.ScriptableObjects;
+using UnityEngine;
 
 namespace Game.InventoryAndObjects.Scripts
 {

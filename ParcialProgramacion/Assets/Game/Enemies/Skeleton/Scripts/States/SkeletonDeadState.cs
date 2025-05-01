@@ -12,12 +12,5 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             _enemy = enemy;
         }
-
-        public override void Enter()
-        {
-            base.Enter();
-            
-            // GameManager.Instance.EnemyKilled();
-        }
     }
 }

@@ -93,7 +93,7 @@ namespace Game.InventoryAndObjects.Scripts
         equipmentDictionary.Add(newEquipment, newItem);
         newEquipment.AddModifiers();
 
-        RemoveItem(_item);
+        RemoveItem(_item , newItem.stackSize);
     }
 
     public void UnequipItem(ItemDataEquipment itemToDelete)
@@ -169,7 +169,7 @@ namespace Game.InventoryAndObjects.Scripts
         }
     }
 
-    private void AddToInventory(ItemData item)
+    public void AddToInventory(ItemData item)
     {
         if (inventoryDictionary.TryGetValue(item, out InventoryItem value))
         {
@@ -183,36 +183,39 @@ namespace Game.InventoryAndObjects.Scripts
         }
     }
 
-    public void RemoveItem(ItemData item)
+    public void RemoveItem(ItemData item, int amount)
     {
-        if (inventoryDictionary.TryGetValue(item, out InventoryItem value))
+        // INVENTORY
+        if (inventoryDictionary.TryGetValue(item, out InventoryItem invItem))
         {
-            if (value.stackSize <= 1)
+            if (invItem.stackSize <= amount)
             {
-                inventory.Remove(value);
+                inventory.Remove(invItem);
                 inventoryDictionary.Remove(item);
             }
             else
             {
-                value.RemoveStack();
+                invItem.stackSize -= amount;
             }
         }
 
-        if (stashSDictionary.TryGetValue(item, out InventoryItem stashValue))
+        // STASH
+        if (stashSDictionary.TryGetValue(item, out InventoryItem stashItem))
         {
-            if (stashValue.stackSize <= 1)
+            if (stashItem.stackSize <= amount)
             {
-                stash.Remove(stashValue);
+                stash.Remove(stashItem);
                 stashSDictionary.Remove(item);
             }
             else
             {
-                stashValue.RemoveStack();
+                stashItem.stackSize -= amount;
             }
         }
 
         UpdateSlotUI();
     }
+
 
     public bool CanCraft(ItemDataEquipment itemToCraft, List<InventoryItem> requiredMaterials)
     {
@@ -220,34 +223,36 @@ namespace Game.InventoryAndObjects.Scripts
 
         for (int i = 0; i < requiredMaterials.Count; i++)
         {
-            if (stashSDictionary.TryGetValue(requiredMaterials[i].itemData, out InventoryItem stashValue))
+            var required = requiredMaterials[i];
+
+            if (stashSDictionary.TryGetValue(required.itemData, out InventoryItem stashValue))
             {
-                if (stashValue.stackSize < requiredMaterials[i].stackSize)
+                if (stashValue.stackSize < required.stackSize)
                 {
                     Debug.Log("Not enough materials");
                     return false;
                 }
                 else
                 {
-                    materialsToRemove.Add(stashValue);
+                    materialsToRemove.Add(required);
                 }
             }
             else
             {
-                Debug.Log("Not enough materials");
+                Debug.Log("Material not found in stash");
                 return false;
             }
         }
-
+        
         for (int i = 0; i < materialsToRemove.Count; i++)
         {
-            RemoveItem(materialsToRemove[i].itemData);
+            RemoveItem(materialsToRemove[i].itemData, materialsToRemove[i].stackSize);
         }
         
         AddItem(itemToCraft);
-        Debug.Log("here is your item " + itemToCraft.name);
         return true;
     }
+    
     
     public List<InventoryItem> GetEquipmentList() => equipment;
     public List<InventoryItem> GetStashList() => stash;

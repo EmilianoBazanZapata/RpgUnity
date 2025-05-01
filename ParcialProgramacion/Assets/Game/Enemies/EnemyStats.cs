@@ -58,7 +58,7 @@ namespace Game.Enemies
         {
             base.Die();
             _enemy.Die();
-            //_itemDrop.GenerateDrop();
+            _itemDrop.GenerateDrop();
         }
     }
 }

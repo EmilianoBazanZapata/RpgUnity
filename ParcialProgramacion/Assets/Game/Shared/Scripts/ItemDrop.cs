@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game.Shared.ScriptableObjects;
+using Game.InventoryAndObjects.ScriptableObjects;
 using UnityEngine;
 
 namespace Game.Shared.Scripts
@@ -14,6 +14,7 @@ namespace Game.Shared.Scripts
 
         public virtual void GenerateDrop()
         {
+            
             foreach (var itemData in possibleDrop)
             {
                 if (Random.Range(0, 100) <= itemData.dropChance)
@@ -22,11 +23,11 @@ namespace Game.Shared.Scripts
                 }
             }
 
-            for (int i = 0; i < posibleAmountDrop; i++)
+            for (int i = 0; i < posibleAmountDrop && _drop.Count > 0; i++)
             {
-                var randomItem = _drop[Random.Range(0, _drop.Count - 1)];
-
-                _drop.Remove(randomItem);
+                int index = Random.Range(0, _drop.Count);
+                var randomItem = _drop[index];
+                _drop.RemoveAt(index);
                 DropItem(randomItem);
             }
         }

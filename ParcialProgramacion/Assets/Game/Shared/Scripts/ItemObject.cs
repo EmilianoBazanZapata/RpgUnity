@@ -1,4 +1,5 @@
-﻿using Game.Shared.ScriptableObjects;
+﻿using Game.InventoryAndObjects.ScriptableObjects;
+using Game.InventoryAndObjects.Scripts;
 using UnityEngine;
 
 namespace Game.Shared.Scripts
@@ -32,6 +33,14 @@ namespace Game.Shared.Scripts
 
         public void PickUpItem()
         {
+
+            if (Inventory.instance == null)
+            {
+                Debug.LogError("Inventory instance is null.");
+                return;
+            }
+
+            Inventory.instance.AddItem(_itemData);
             Destroy(gameObject);
         }
     }

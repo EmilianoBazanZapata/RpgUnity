@@ -69,7 +69,7 @@ namespace Game.UI.Scripts
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            Inventory.instance.RemoveItem(item.itemData);
+            Inventory.instance.RemoveItem(item.itemData,0);
             return;
         }
 
