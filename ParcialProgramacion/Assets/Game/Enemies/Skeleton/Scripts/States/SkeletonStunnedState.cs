@@ -18,9 +18,9 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             base.Enter();
         
-            StateTimer =_enemySkeleton.stunnDuration;
+            StateTimer =_enemySkeleton.StunDuration;
         
-            Rigidbody2D.velocity = new Vector2(-_enemySkeleton.FacingDir * _enemySkeleton.stunDirection.x, _enemySkeleton.stunDirection.y);
+            Rigidbody2D.velocity = new Vector2(-_enemySkeleton.FacingDir * _enemySkeleton.StunDirection.x, _enemySkeleton.StunDirection.y);
         }
         
         public override void Update()

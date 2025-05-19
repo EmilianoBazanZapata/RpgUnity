@@ -17,13 +17,15 @@ namespace Game.Enemies.Skeleton.Scripts
 
         #endregion
 
+        #region Unity Methods
+
         protected override void Awake()
         {
             base.Awake();
 
             IdleState = new SkeletonIdleState(this, EnemyStateMachine, "Idle", this);
             MoveState = new SkeletonMoveState(this, EnemyStateMachine, "Move", this);
-            BattleState = new SkeletonBattleState(this, EnemyStateMachine, "Move", this);
+            BattleState = new SkeletonBattleState(this, EnemyStateMachine, "Move", this); // ¿Anim "Battle"?
             AttackState = new SkeletonAttackState(this, EnemyStateMachine, "Attack", this);
             StunnedState = new SkeletonStunnedState(this, EnemyStateMachine, "Stunned", this);
             DeadState = new SkeletonDeadState(this, EnemyStateMachine, "Die", this);
@@ -39,15 +41,22 @@ namespace Game.Enemies.Skeleton.Scripts
         {
             base.Update();
 
+#if UNITY_EDITOR
+            // Atajo para testear cambio de estado a Stunned
             if (Input.GetKeyDown(KeyCode.U))
                 EnemyStateMachine.ChangeState(StunnedState);
+#endif
         }
 
-        public override bool CanBeStunned()
-        {
-            if (!base.CanBeStunned()) return false;
+        #endregion
 
-            EnemyStateMachine.ChangeState(StunnedState);
+        #region Overrides
+
+        public bool TryStun()
+        {
+            if (!CanBeStunnedNow) return false;
+
+            CloseCounterAttackWindow();
             return true;
         }
 
@@ -57,28 +66,27 @@ namespace Game.Enemies.Skeleton.Scripts
             EnemyStateMachine.ChangeState(DeadState);
         }
 
-        #region  Restart Enemy
-        
+        #endregion
+
+        #region Restart / Pool
+
         public void NotifyDead()
         {
             GameManager.Instance.EnemyKilled();
             ResetHealthUI();
-            SetStateByDefault();
+            SetStateToDefault();
             OnDeath?.Invoke();
             ReturnToPool();
         }
 
         protected override void ReturnToPool()
         {
-            base.ReturnToPool();
-
-            _pool.ReturnObject(gameObject);
+            Pool.ReturnObject(gameObject);
         }
 
         private void ResetHealthUI() => Stats.ResetHealth();
-        private void SetStateByDefault() =>  EnemyStateMachine.ChangeState(IdleState);
+        private void SetStateToDefault() => EnemyStateMachine.ChangeState(IdleState);
 
         #endregion
-        
     }
 }

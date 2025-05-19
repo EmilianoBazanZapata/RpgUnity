@@ -1,5 +1,4 @@
-﻿using Game.Player.Scripts;
-using Game.Player.Scripts.Managers;
+﻿using Game.Character.Scripts;
 using Game.Shared.Enums;
 using TMPro;
 using UnityEngine;
@@ -36,26 +35,28 @@ namespace Game.UI.Scripts
 
     public void UpdateStatValueUI()
     {
-        var playerStats = PlayerManager.Instance.Player.GetComponent<PlayerStats>();
+        var playerStats = Player.Instance.GetComponent<PlayerStats>();
 
-        if(playerStats != null)
-        {
-            statValueText.text = playerStats.GetStat(statType).GetValue().ToString();
+        if (playerStats == null) return;
+        statValueText.text = playerStats.GetStat(statType).GetValue().ToString();
             
-            if (statType == StatType.health)
+        switch (statType)
+        {
+            case StatType.health:
                 statValueText.text = playerStats.GetMaxHealthValue().ToString();
-
-            if (statType == StatType.damage)
+                break;
+            case StatType.damage:
                 statValueText.text = (playerStats.damage.GetValue() + playerStats.strength.GetValue()).ToString();
-
-            if (statType == StatType.critPower)
+                break;
+            case StatType.critPower:
                 statValueText.text = (playerStats.critPower.GetValue() + playerStats.strength.GetValue()).ToString();
-
-            if(statType == StatType.critChance)
+                break;
+            case StatType.critChance:
                 statValueText.text = (playerStats.critChance.GetValue() + playerStats.agility.GetValue()).ToString();
-
-            if (statType == StatType.evasion)
+                break;
+            case StatType.evasion:
                 statValueText.text = (playerStats.evasion.GetValue() + playerStats.agility.GetValue()).ToString();
+                break;
         }
     }
 

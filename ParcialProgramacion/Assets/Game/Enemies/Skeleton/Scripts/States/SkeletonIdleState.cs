@@ -15,7 +15,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         public override void Enter()
         {
             base.Enter();
-            StateTimer = EnemySkeleton.idleTime;
+            StateTimer = EnemySkeleton.IdleTime;
         }
         
         public override void Update()

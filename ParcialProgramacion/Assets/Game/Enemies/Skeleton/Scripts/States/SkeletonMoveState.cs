@@ -15,7 +15,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             base.Update();
 
-            EnemySkeleton.SetVelocity(EnemySkeleton.moveSpeed * EnemySkeleton.FacingDir, Rigidbody2D.velocity.y);
+            EnemySkeleton.SetVelocity(EnemySkeleton.MoveSpeed * EnemySkeleton.FacingDir, Rigidbody2D.velocity.y);
 
             if (!EnemySkeleton.IsWallDetected() && EnemySkeleton.IsGroundDetected()) return;
             

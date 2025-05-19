@@ -6,18 +6,21 @@ namespace Game.Enemies.Skeleton.Scripts.States
 {
     public class SkeletonDeadState : EnemyState
     {
-        private EnemySkeleton _enemy;
+        private readonly EnemySkeleton _enemySkeleton;
 
-        public SkeletonDeadState(Enemy enemyBase, EnemyStateMachine enemyStateMachine, string animBoolName,
-            EnemySkeleton enemy) : base(enemyBase, enemyStateMachine, animBoolName)
+        public SkeletonDeadState(Enemy enemyBase,
+            EnemyStateMachine enemyStateMachine,
+            string animBoolName,
+            EnemySkeleton enemySkeleton)
+            : base(enemyBase, enemyStateMachine, animBoolName)
         {
-            _enemy = enemy;
+            _enemySkeleton = enemySkeleton;
         }
 
         public override void Enter()
         {
-            base.Enter();   
-            
+            base.Enter();
+
             SoundManager.Instance.PlaySound(SoundType.EnemyDeath);
         }
     }

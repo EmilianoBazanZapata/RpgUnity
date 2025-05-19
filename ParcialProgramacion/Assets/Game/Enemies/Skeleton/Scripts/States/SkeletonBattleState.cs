@@ -1,5 +1,4 @@
 ﻿using Game.Enemies.StateMachine;
-using Game.Player.Scripts.Managers;
 using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts.States
@@ -21,7 +20,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         public override void Enter()
         {
             base.Enter();
-            _player = PlayerManager.Instance.Player.transform;
+            _player = Character.Scripts.Player.Instance.transform;
         }
         
         public override void Update()
@@ -30,9 +29,9 @@ namespace Game.Enemies.Skeleton.Scripts.States
 
             if (_enemySkeleton.IsPlayerDetected())
             {
-                StateTimer = _enemySkeleton.battleTime;
+                StateTimer = _enemySkeleton.BattleTime;
             
-                if (_enemySkeleton.IsPlayerDetected().distance < _enemySkeleton.attackDistance)
+                if (_enemySkeleton.IsPlayerDetected().distance < _enemySkeleton.AttackDistance)
                     if (CanAttack())
                         EnemyStateMachine.ChangeState(_enemySkeleton.AttackState);
             }
@@ -47,14 +46,14 @@ namespace Game.Enemies.Skeleton.Scripts.States
             else if (_player.position.x < _enemySkeleton.transform.position.x)
                 _moveDir = -1;
 
-            _enemySkeleton.SetVelocity(_enemySkeleton.moveSpeed * _moveDir, Rigidbody2D.velocity.y);
+            _enemySkeleton.SetVelocity(_enemySkeleton.MoveSpeed * _moveDir, Rigidbody2D.velocity.y);
         }
 
         private bool CanAttack()
         {
-            if (!(Time.time >= _enemySkeleton.lastTimeAttacked + _enemySkeleton.attackCooldown)) return false;
+            if (!(Time.time >= _enemySkeleton.LastTimeAttacked + _enemySkeleton.AttackCooldown)) return false;
             
-            _enemySkeleton.lastTimeAttacked = Time.time;
+            _enemySkeleton.LastTimeAttacked = Time.time;
             
             return true;
         }

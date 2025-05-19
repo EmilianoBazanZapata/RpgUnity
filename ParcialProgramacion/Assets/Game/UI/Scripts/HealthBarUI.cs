@@ -21,7 +21,7 @@ namespace Game.UI.Scripts
             _characterStats = GetComponentInParent<CharacterStats>();
             
             if (_characterStats != null)
-                _characterStats._onHealthChanged += UpdateHealthUI;
+                _characterStats.OnHealthChanged += UpdateHealthUI;
             
             UpdateHealthUI();
             
@@ -33,7 +33,7 @@ namespace Game.UI.Scripts
             if (_slider == null || _characterStats == null) return;
             
             _slider.maxValue = _characterStats.GetMaxHealthValue();
-            _slider.value = _characterStats.GetHealt();
+            _slider.value = _characterStats.GetHealth();
         }
 
         public void ResetHealtUIValue()

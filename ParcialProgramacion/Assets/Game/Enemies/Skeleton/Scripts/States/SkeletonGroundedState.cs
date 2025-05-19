@@ -1,5 +1,4 @@
 ﻿using Game.Enemies.StateMachine;
-using Game.Player.Scripts.Managers;
 using UnityEngine;
 
 namespace Game.Enemies.Skeleton.Scripts.States
@@ -7,12 +6,13 @@ namespace Game.Enemies.Skeleton.Scripts.States
     public class SkeletonGroundedState : EnemyState
     {
         protected EnemySkeleton EnemySkeleton;
-        protected Transform Player;
+        protected Transform PlayerTransform;
 
-        public SkeletonGroundedState(Enemy enemy, 
-                                     EnemyStateMachine enemyStateMachine, 
-                                     string animBoolName,
-                                     EnemySkeleton enemySkeleton) : base(enemy, enemyStateMachine, animBoolName)
+        public SkeletonGroundedState(Enemy enemy,
+            EnemyStateMachine enemyStateMachine,
+            string animBoolName,
+            EnemySkeleton enemySkeleton)
+            : base(enemy, enemyStateMachine, animBoolName)
         {
             EnemySkeleton = enemySkeleton;
         }
@@ -20,21 +20,21 @@ namespace Game.Enemies.Skeleton.Scripts.States
         public override void Enter()
         {
             base.Enter();
-            Player = PlayerManager.Instance.Player.transform;
+            
+            PlayerTransform = Character.Scripts.Player.Instance.transform;
         }
 
         public override void Update()
         {
             base.Update();
 
-            if (EnemySkeleton.IsPlayerDetected() ||
-                Vector2.Distance(EnemySkeleton.transform.position, Player.position) < 2)
-                EnemyStateMachine.ChangeState(EnemySkeleton.BattleState);
+            bool isPlayerDetected = EnemySkeleton.IsPlayerDetected();
+            var distanceToPlayer = Vector2.Distance(EnemySkeleton.transform.position, PlayerTransform.position);
 
-            if (EnemySkeleton.IsPlayerDetected() ||
-                Vector2.Distance(EnemySkeleton.transform.position, Player.transform.position) <
-                EnemySkeleton.agroDistance)
+            if (isPlayerDetected || distanceToPlayer < EnemySkeleton.agroDistance)
+            {
                 EnemyStateMachine.ChangeState(EnemySkeleton.BattleState);
+            }
         }
     }
 }

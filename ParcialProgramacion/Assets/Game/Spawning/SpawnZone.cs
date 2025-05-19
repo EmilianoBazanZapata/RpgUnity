@@ -3,96 +3,113 @@ using Game.Enemies;
 using Game.Managers;
 using Game.Shared.Enums;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game.Spawning
 {
     public class SpawnZone : MonoBehaviour
     {
-        [SerializeField] private int maxEnemies = 3;
-        [SerializeField] private float respawnDistance = 10f;
-        [SerializeField] private float triggerDistance = 7f;
-        [SerializeField] private Transform[] spawnPoints;
-        [SerializeField] private float respawnCooldown = 60f;
+        #region Serialized Fields
 
-        [FormerlySerializedAs("enemyPool")] [SerializeField]
-        private ObjectPoolEnemy enemyPoolEnemy;
+        [SerializeField] private int _maxEnemies = 3;
+        [SerializeField] private float _respawnDistance = 10f;
+        [SerializeField] private float _triggerDistance = 7f;
+        [SerializeField] private Transform[] _spawnPoints;
+        [SerializeField] private float _respawnCooldown = 60f;
+        [SerializeField] private ObjectPoolEnemy _enemyPool;
+        [SerializeField] private Transform _playerTransform;
 
-        private float _timeSinceAllDead = 0f;
-        private bool _allEnemiesDead = false;
-        private List<GameObject> _currentEnemies = new();
-        private GameObject _player;
+        #endregion
 
-        private bool _playerWasClose;
+        #region Private Fields
 
-        private void Start()
-        {
-            _player = GameObject.FindGameObjectWithTag("Player");
-            TrySpawnEnemies();
-        }
+        private float _respawnTimer = 0f;
+        private bool _readyToRespawn = false;
+        private readonly List<GameObject> _currentEnemies = new();
 
+        #endregion
+
+        #region Unity Methods
+
+        private void Start() => TrySpawnEnemies();
         private void Update()
         {
-            if (GameManager.Instance.CurrentState != GameState.InGame) return;
-            
-            var distance = Vector2.Distance(transform.position, _player.transform.position);
+            if (!IsInGameState() || _playerTransform == null)
+                return;
 
-            // Si todos murieron, iniciar el cooldown si aún no está corriendo
-            if (_currentEnemies.Count == 0 && !_allEnemiesDead)
+            var distanceToPlayer = Vector2.Distance(transform.position, _playerTransform.position);
+
+            HandleRespawnTimer();
+
+            if (CanRespawn(distanceToPlayer))
+                PerformRespawn();
+        }
+        
+        #endregion
+
+        #region Private Methods
+        private bool IsInGameState() => GameManager.Instance.CurrentState == GameState.InGame;
+
+        private void HandleRespawnTimer()
+        {
+            if (_currentEnemies.Count == 0 && !_readyToRespawn)
             {
-                _allEnemiesDead = true;
-                _timeSinceAllDead = 0f;
+                _readyToRespawn = true;
+                _respawnTimer = 0f;
             }
 
-            // Si el cooldown está corriendo, acumulá el tiempo
-            if (_allEnemiesDead)
-            {
-                _timeSinceAllDead += Time.deltaTime;
-            }
+            if (_readyToRespawn)
+                _respawnTimer += Time.deltaTime;
+        }
 
-            // ✅ Cuando el jugador se aleja lo suficiente Y pasó el tiempo, respawneamos
-            if (_allEnemiesDead && _timeSinceAllDead >= respawnCooldown && distance > respawnDistance)
-            {
-                TrySpawnEnemies();
-                _allEnemiesDead = false;
-            }
+        private bool CanRespawn(float distanceToPlayer)
+        {
+            return _readyToRespawn &&
+                   _respawnTimer >= _respawnCooldown &&
+                   distanceToPlayer > _respawnDistance;
+        }
+
+        private void PerformRespawn()
+        {
+            TrySpawnEnemies();
+            _readyToRespawn = false;
         }
 
         private void TrySpawnEnemies()
         {
-            if (_currentEnemies.Count >= maxEnemies) return;
-
-            var enemiesToSpawn = Mathf.Min(maxEnemies - _currentEnemies.Count, spawnPoints.Length);
+            var enemiesToSpawn = Mathf.Min(_maxEnemies - _currentEnemies.Count, _spawnPoints.Length);
 
             for (int i = 0; i < enemiesToSpawn; i++)
             {
-                var enemy = enemyPoolEnemy.GetObject();
+                var enemy = _enemyPool.GetObject();
                 if (enemy == null)
                     continue;
 
-                enemy.transform.position = spawnPoints[i].position;
+                enemy.transform.position = _spawnPoints[i].position;
 
-                var enemyBase = enemy.GetComponent<Enemy>();
-                
-                enemyBase.SetPool(enemyPoolEnemy);
+                if (!enemy.TryGetComponent(out Enemy enemyBase))
+                    continue;
+
+                enemyBase.SetPool(_enemyPool);
                 enemyBase.ResetUIHealth();
                 enemy.SetActive(true);
 
-                // Setear el evento OnDeath una sola vez
-                enemyBase.OnDeath = () =>
-                {
-                    enemyBase.WasDeadBeforeRespawn = true;
-                    _currentEnemies.Remove(enemy);
-
-                    if (_currentEnemies.Count == 0)
-                    {
-                        _allEnemiesDead = true;
-                        _timeSinceAllDead = 0f;
-                    }
-                };
+                enemyBase.OnDeath = () => OnEnemyDeath(enemy);
 
                 _currentEnemies.Add(enemy);
             }
         }
+
+        private void OnEnemyDeath(GameObject enemy)
+        {
+            if (_currentEnemies.Contains(enemy))
+                _currentEnemies.Remove(enemy);
+
+            if (_currentEnemies.Count != 0) return;
+            
+            _readyToRespawn = true;
+            _respawnTimer = 0f;
+        }
+
+        #endregion
     }
 }

@@ -12,143 +12,162 @@ namespace Game.Enemies
 {
     public class Enemy : Entity
     {
+        #region Serialized Fields
+
+        [Header("Detección y Movimiento")]
         [SerializeField] protected LayerMask WhatIsPlayer;
+        [SerializeField] private float _moveSpeed = 2f;
+        [SerializeField] private float _idleTime;
+        [SerializeField] private float _battleTime;
 
-        [Header("Stunned info")] public float stunnDuration;
-        public Vector2 stunDirection;
-        public bool canBeStunned;
-        [SerializeField] protected GameObject counterImage;
+        [Header("Ataque")]
+        [SerializeField] private float _attackDistance = 1f;
+        [SerializeField] private float _attackCooldown = 1f;
 
-        [Header("Move info")] public float moveSpeed;
-        public float idleTime;
-        public float battleTime;
-        private float _defaultMoveSpeed;
+        [Header("Stun")]
+        [SerializeField] private float _stunDuration;
+        [SerializeField] private Vector2 _stunDirection;
+        [SerializeField] private GameObject _counterImage;
 
-        [Header("Attack info")] public float attackDistance;
-        public float attackCooldown;
-        [HideInInspector] public float lastTimeAttacked;
+        [Header("UI")]
+        [SerializeField] private HealthBarUI _healthBarUI;
+
+        #endregion
+
+        #region Properties
 
         public EnemyStateMachine EnemyStateMachine { get; private set; }
-        public string lastAnimBoolName { get; private set; }
-        [SerializeField] public HealthBarUI HealthBarUI;
+        public float LastTimeAttacked { get; set; }
+        public bool CanBeStunnedNow { get; private set; }
+        public float MoveSpeed => _moveSpeed;
+        public float AttackDistance => _attackDistance;
+        public float AttackCooldown => _attackCooldown;
+        public float StunDuration => _stunDuration;
+        public Vector2 StunDirection => _stunDirection;
+        public bool CanBeStunned => CanBeStunnedNow;
+        public float BattleTime => _battleTime;
+        public float IdleTime => _idleTime;
+        public string LastAnimBoolName { get; private set; }
+        public ObjectPoolEnemy Pool { get; private set; }
         public Action OnDeath;
         public bool WasDeadBeforeRespawn { get; set; }
-        public ObjectPoolEnemy _pool;
-        
+
+        #endregion
+
+        #region Private Fields
+
+        private float _defaultMoveSpeed;
+
+        #endregion
+
+        #region Unity Methods
+
         protected override void Awake()
         {
             base.Awake();
-
             EnemyStateMachine = new EnemyStateMachine();
-
-            _defaultMoveSpeed = moveSpeed;
+            _defaultMoveSpeed = _moveSpeed;
         }
 
         protected override void Update()
         {
             base.Update();
-
             if (GameManager.Instance.CurrentState != GameState.InGame) return;
-            
+
             EnemyStateMachine.CurrentState.Update();
         }
 
-        public void AssingLastAnimName(string animBoolName) => lastAnimBoolName = animBoolName;
-
-        public virtual void FreezeTimer(bool timeFrozen)
+        protected override void OnDrawGizmos()
         {
-            if (timeFrozen)
-            {
-                moveSpeed = 0;
-                Anim.speed = 0;
-            }
-            else
-            {
-                moveSpeed = _defaultMoveSpeed;
-                Anim.speed = 1;
-            }
+            base.OnDrawGizmos();
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.right * AttackDistance * FacingDir);
         }
 
-        protected virtual IEnumerator FreezeTimeFor(float seconds)
-        {
-            FreezeTimer(true);
+        #endregion
 
-            yield return new WaitForSeconds(seconds);
-
-            FreezeTimer(false);
-        }
-
-        public virtual void OpenCOunterAttackWindow()
-        {
-            canBeStunned = true;
-            counterImage.SetActive(true);
-        }
-
-        public virtual void CloseCounterAttackWindow()
-        {
-            canBeStunned = false;
-            counterImage.SetActive(false);
-        }
-
-        public virtual bool CanBeStunned()
-        {
-            if (!canBeStunned) return false;
-
-            CloseCounterAttackWindow();
-            return true;
-        }
-
-        public virtual void AnimationFinishTrigger() => EnemyStateMachine.CurrentState.AnimationFinishTrigger();
+        #region Combat & Status
 
         public override void SlowEntityBy(float slowPercentage, float slowDuration)
         {
-            moveSpeed = moveSpeed * (1 - slowPercentage);
-            Anim.speed = Anim.speed * (1 - slowPercentage);
-
-            Invoke("ReturnDefaultSpeed", slowDuration);
+            _moveSpeed *= (1 - slowPercentage);
+            Anim.speed *= (1 - slowPercentage);
+            Invoke(nameof(ReturnDefaultSpeed), slowDuration);
         }
 
         protected override void ReturnDefaultSpeed()
         {
             base.ReturnDefaultSpeed();
-            moveSpeed = _defaultMoveSpeed;
+            _moveSpeed = _defaultMoveSpeed;
+        }
+
+        public virtual void FreezeTimer(bool frozen)
+        {
+            _moveSpeed = frozen ? 0f : _defaultMoveSpeed;
+            Anim.speed = frozen ? 0f : 1f;
+        }
+
+        public IEnumerator FreezeTimeFor(float seconds)
+        {
+            FreezeTimer(true);
+            yield return new WaitForSeconds(seconds);
+            FreezeTimer(false);
         }
 
         public virtual RaycastHit2D IsPlayerDetected()
         {
-            var playerDetected = Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDir, 50, WhatIsPlayer);
-            var wallDetected = Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDir, 50, whatIsGround);
+            var rayPlayer = Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDir, 50f, WhatIsPlayer);
+            var rayWall = Physics2D.Raycast(wallCheck.position, Vector2.right * FacingDir, 50f, whatIsGround);
 
-            if (!wallDetected) return playerDetected;
-
-            return wallDetected.distance < playerDetected.distance ? default(RaycastHit2D) : playerDetected;
+            if (!rayWall) return rayPlayer;
+            return rayWall.distance < rayPlayer.distance ? default : rayPlayer;
         }
 
-
-        protected override void OnDrawGizmos()
+        public virtual void AnimationFinishTrigger()
         {
-            base.OnDrawGizmos();
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position,
-                new Vector3(transform.position.x + attackDistance * FacingDir, transform.position.y));
+            EnemyStateMachine.CurrentState.AnimationFinishTrigger();
         }
-        
+
+        public void AssignLastAnimName(string animBoolName)
+        {
+            LastAnimBoolName = animBoolName;
+        }
+
+        #endregion
+
+        #region Stun / Counter Logic
+
+        public void OpenCounterAttackWindow()
+        {
+            CanBeStunnedNow = true;
+            _counterImage.SetActive(true);
+        }
+
+        public void CloseCounterAttackWindow()
+        {
+            CanBeStunnedNow = false;
+            _counterImage.SetActive(false);
+        }
+
+        public bool TryStun()
+        {
+            if (!CanBeStunnedNow) return false;
+            CloseCounterAttackWindow();
+            return true;
+        }
+
+        #endregion
+
+        #region Pool & UI
+
+        public void SetPool(ObjectPoolEnemy pool) => Pool = pool;
+
+        public void ResetUIHealth() => _healthBarUI.ResetHealtUIValue();
+
         public void SubscribeOnDeath(Action callback) => OnDeath += callback;
-        
-        protected virtual void ReturnToPool()
-        {
-            
-        }
-        
-        public void SetPool(ObjectPoolEnemy pool)
-        {
-            _pool = pool;
-        }
 
-        public void ResetUIHealth()
-        {
-            HealthBarUI.ResetHealtUIValue();
-        }
+        protected virtual void ReturnToPool() { }
+
+        #endregion
     }
 }

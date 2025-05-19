@@ -1,47 +1,49 @@
 ﻿using System.Collections.Generic;
 using Game.InventoryAndObjects.ScriptableObjects;
-using Game.Player.Scripts;
-using Game.Player.Scripts.Managers;
 using Game.Shared.Enums;
 using UnityEngine;
+using Game.Character.Scripts;
 
 namespace Game.InventoryAndObjects.Scripts
 {
     [CreateAssetMenu(fileName = "new Equipment Item Data", menuName = "Data/Equipment")]
     public class ItemDataEquipment : ItemData
     {
+        [Header("Tipo de equipo")]
         public EquipmentType equipmentType;
         public ItemEffect[] itemEffects;
         public float itemCoolDown;
 
-
-        [Header("Major stats")] public int strength;
+        [Header("Atributos principales")]
+        public int strength;
         public int agility;
         public int intelligence;
         public int vitality;
 
-        [Header("Offensive stats")] public int damage;
+        [Header("Atributos ofensivos")]
+        public int damage;
         public int critChance;
         public int critPower;
 
-        [Header("Defensive stats")] public int health;
+        [Header("Atributos defensivos")]
+        public int health;
         public int armor;
         public int evasion;
         public int magicResistance;
 
-        [Header("Magic stats")] public int fireDamage;
+        [Header("Atributos mágicos")]
+        public int fireDamage;
         public int iceDamage;
         public int lightningDamage;
 
-        [Header("Craft rquirements")] public List<InventoryItem> craftingMaterials;
-
+        [Header("Requisitos de crafteo")]
+        public List<InventoryItem> craftingMaterials;
 
         private int _descriptionLength;
 
-
         public void AddModifiers()
         {
-            var playerStats = PlayerManager.Instance.Player.GetComponent<PlayerStats>();
+            var playerStats = Player.Instance.GetComponent<PlayerStats>();
 
             playerStats.strength.AddModifier(strength);
             playerStats.agility.AddModifier(agility);
@@ -58,7 +60,7 @@ namespace Game.InventoryAndObjects.Scripts
 
         public void RemoveModifiers()
         {
-            var playerStats = PlayerManager.Instance.Player.GetComponent<PlayerStats>();
+            var playerStats = Player.Instance.GetComponent<PlayerStats>();
 
             playerStats.strength.RemoveModifier(strength);
             playerStats.agility.RemoveModifier(agility);
@@ -75,7 +77,7 @@ namespace Game.InventoryAndObjects.Scripts
 
         public override string GetDescription()
         {
-            stringBuilder.Length = 0;
+            _stringBuilder.Length = 0;
             _descriptionLength = 0;
 
             AddItemDescription(strength, "Strength");
@@ -84,63 +86,47 @@ namespace Game.InventoryAndObjects.Scripts
             AddItemDescription(vitality, "Vitality");
 
             AddItemDescription(damage, "Damage");
-            AddItemDescription(critChance, "Crit.Chance");
-            AddItemDescription(critPower, "Crit.Power");
+            AddItemDescription(critChance, "Crit Chance");
+            AddItemDescription(critPower, "Crit Power");
 
             AddItemDescription(health, "Health");
-            AddItemDescription(evasion, "Evasion");
             AddItemDescription(armor, "Armor");
-            AddItemDescription(magicResistance, "Magic Resist.");
+            AddItemDescription(evasion, "Evasion");
+            AddItemDescription(magicResistance, "Magic Resist");
 
-            AddItemDescription(fireDamage, "Fire damage");
-            AddItemDescription(iceDamage, "Ice damage");
-            AddItemDescription(lightningDamage, "Lighting dmg. ");
+            AddItemDescription(fireDamage, "Fire Damage");
+            AddItemDescription(iceDamage, "Ice Damage");
+            AddItemDescription(lightningDamage, "Lightning Damage");
 
-
-            for (int i = 0; i < itemEffects.Length; i++)
+            foreach (var effect in itemEffects)
             {
-                if (itemEffects[i].effectDescription.Length > 0)
-                {
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine("Unique: " + itemEffects[i].effectDescription);
-                    _descriptionLength++;
-                }
+                if (string.IsNullOrWhiteSpace(effect.effectDescription)) continue;
+                _stringBuilder.AppendLine();
+                _stringBuilder.AppendLine("Unique: " + effect.effectDescription);
+                _descriptionLength++;
             }
 
+            for (int i = _descriptionLength; i < 5; i++)
+                _stringBuilder.AppendLine();
 
-            if (_descriptionLength < 5)
-            {
-                for (int i = 0; i < 5 - _descriptionLength; i++)
-                {
-                    stringBuilder.AppendLine();
-                    stringBuilder.Append("");
-                }
-            }
-
-
-            return stringBuilder.ToString();
+            return _stringBuilder.ToString();
         }
 
         public void ExecuteItemEffect(Transform enemyPosition)
         {
-            foreach (var item in itemEffects)
-            {
-                item.ExecuteEffect(enemyPosition);
-            }
+            foreach (var effect in itemEffects)
+                effect.ExecuteEffect(enemyPosition);
         }
 
-        private void AddItemDescription(int _value, string _name)
+        private void AddItemDescription(int value, string name)
         {
-            if (_value != 0)
-            {
-                if (stringBuilder.Length > 0)
-                    stringBuilder.AppendLine();
+            if (value == 0) return;
 
-                if (_value > 0)
-                    stringBuilder.Append("+ " + _value + " " + _name);
+            if (_stringBuilder.Length > 0)
+                _stringBuilder.AppendLine();
 
-                _descriptionLength++;
-            }
+            _stringBuilder.Append($"+ {value} {name}");
+            _descriptionLength++;
         }
     }
 }

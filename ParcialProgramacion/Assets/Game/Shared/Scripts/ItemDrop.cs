@@ -4,41 +4,73 @@ using UnityEngine;
 
 namespace Game.Shared.Scripts
 {
+    /// <summary>
+    /// Componente que permite dropear objetos con probabilidad al morir un enemigo u ocurrir un evento.
+    /// </summary>
     public class ItemDrop : MonoBehaviour
     {
-        [SerializeField] private ItemData[] possibleDrop;
-        [SerializeField] private List<ItemData> _drop = new();
-        [SerializeField] private GameObject _dropPrefab;
-        [SerializeField] private ItemData _item;
-        [SerializeField] private int posibleAmountDrop;
+        #region Serialized Fields
 
+        [Header("Datos de posibles drops")]
+        [SerializeField] private ItemData[] _possibleDrop;
+        [SerializeField] private int _possibleAmountDrop = 1;
+
+        [Header("Prefab del objeto a instanciar")]
+        [SerializeField] private GameObject _dropPrefab;
+
+        [Header("Rango de fuerza inicial del drop")]
+        [SerializeField] private Vector2 _dropForceX = new(-5f, 5f);
+        [SerializeField] private Vector2 _dropForceY = new(15f, 20f);
+
+        #endregion
+
+        #region Private Fields
+
+        private readonly List<ItemData> _selectedDrops = new();
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Genera drops aleatorios en base a la probabilidad de cada ítem.
+        /// </summary>
         public virtual void GenerateDrop()
         {
-            
-            foreach (var itemData in possibleDrop)
+            _selectedDrops.Clear();
+
+            foreach (var itemData in _possibleDrop)
             {
                 if (Random.Range(0, 100) <= itemData.dropChance)
-                {
-                    _drop.Add(itemData);
-                }
+                    _selectedDrops.Add(itemData);
             }
 
-            for (int i = 0; i < posibleAmountDrop && _drop.Count > 0; i++)
+            for (int i = 0; i < _possibleAmountDrop && _selectedDrops.Count > 0; i++)
             {
-                int index = Random.Range(0, _drop.Count);
-                var randomItem = _drop[index];
-                _drop.RemoveAt(index);
+                int index = Random.Range(0, _selectedDrops.Count);
+                var randomItem = _selectedDrops[index];
+                _selectedDrops.RemoveAt(index);
+
                 DropItem(randomItem);
             }
         }
 
+        /// <summary>
+        /// Instancia el ítem en el mundo con una fuerza aleatoria.
+        /// </summary>
+        /// <param name="itemData">El ítem a dropear.</param>
         public void DropItem(ItemData itemData)
         {
-            var newDrop = Instantiate(_dropPrefab, transform.position, Quaternion.identity);
+            GameObject newDrop = Instantiate(_dropPrefab, transform.position, Quaternion.identity);
 
-            var randomVelocity = new Vector2(Random.Range(-5, 5), Random.Range(15, 20));
+            Vector2 randomVelocity = new(
+                Random.Range(_dropForceX.x, _dropForceX.y),
+                Random.Range(_dropForceY.x, _dropForceY.y));
 
-            newDrop.GetComponent<ItemObject>().SetupItem(itemData, randomVelocity);
+            if (newDrop.TryGetComponent(out ItemObject itemObject))
+                itemObject.SetupItem(itemData, randomVelocity);
         }
+
+        #endregion
     }
 }

@@ -19,7 +19,7 @@ namespace Game.Enemies.Skeleton.Scripts.States
         {
             base.Exit();
 
-            _enemySkeleton.lastTimeAttacked = Time.time; 
+            _enemySkeleton.LastTimeAttacked = Time.time; 
         }
 
         public override void Update()

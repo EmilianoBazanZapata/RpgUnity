@@ -661,18 +661,15 @@ MonoBehaviour:
   WhatIsPlayer:
     serializedVersion: 2
     m_Bits: 128
-  stunnDuration: 0.7
-  stunDirection: {x: 0, y: 0}
-  canBeStunned: 0
-  counterImage: {fileID: 1235937638361103084}
-  moveSpeed: 1.7
-  idleTime: 1
-  battleTime: 7
-  attackDistance: 1.5
-  attackCooldown: 0.4
-  lastTimeAttacked: 0
-  HealthBarUI: {fileID: 3034702192144183675}
-  _pool: {fileID: 0}
+  _moveSpeed: 2
+  _idleTime: 0
+  _battleTime: 0
+  _attackDistance: 1
+  _attackCooldown: 1
+  _stunDuration: 0
+  _stunDirection: {x: 0, y: 0}
+  _counterImage: {fileID: 1235937638361103084}
+  _healthBarUI: {fileID: 3034702192144183675}
 --- !u!114 &8024380539319290013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,7 +711,7 @@ MonoBehaviour:
     modifiers: 
   _currentHealth: 0
   _level: 1
-  _percantageModifier: 0
+  _percentageModifier: 0.4
 --- !u!114 &8619422585109459777
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -727,14 +724,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bc10d2f9f1747498d6c34739c689266, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possibleDrop:
+  _possibleDrop:
   - {fileID: 11400000, guid: 0d425132bb760ec44b07eccdfc0d2086, type: 2}
-  - {fileID: 11400000, guid: 584098b26d1df374f8a23d3b4da4781b, type: 2}
-  - {fileID: 11400000, guid: 61d74b0fd361d384fa76c9cb6a90f128, type: 2}
-  _drop: []
+  _possibleAmountDrop: 1
   _dropPrefab: {fileID: 2490745344909398832, guid: e3c641c7988a6d94cbaead01536b7e5a, type: 3}
-  _item: {fileID: 11400000, guid: 0d425132bb760ec44b07eccdfc0d2086, type: 2}
-  posibleAmountDrop: 100
+  _dropForceX: {x: -5, y: 5}
+  _dropForceY: {x: 15, y: 20}
 --- !u!1 &6963159173619549207
 GameObject:
   m_ObjectHideFlags: 0
